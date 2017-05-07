@@ -34,14 +34,14 @@ class PolyhedronGeometry extends Geometry {
 
   // Project vector onto sphere's surface
   PolyhedronGeometryVertex _prepare(PolyhedronGeometryVertex vertex) {
-    vertex.normalize();
     _p.add(vertex);
     vertex.index = _p.length - 1;
 
     // Texture coords are equivalent to map coords, calculate angle and convert to fraction of a circle.
 
-    var u = _azimuth(vertex) / 2 / Math.PI + 0.5;
-    var v = _inclination(vertex) / Math.PI + 0.5;
+    var vn = vertex.normalized();
+    var u = _azimuth(vn) / 2 / Math.PI + 0.5;
+    var v = _inclination(vn) / Math.PI + 0.5;
     vertex.uv = new UV(u, 1 - v);
 
     return vertex;
