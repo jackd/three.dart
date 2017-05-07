@@ -1,6 +1,6 @@
 part of three;
 
-class QuadraticBezierCurve3 extends Curve3D {
+class QuadraticBezierCurve3 extends Curve<Vector3> {
   Vector3 v0, v1, v2;
   QuadraticBezierCurve3(this.v0, this.v1, this.v2) : super();
 

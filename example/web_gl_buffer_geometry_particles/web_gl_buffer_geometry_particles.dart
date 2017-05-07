@@ -18,31 +18,29 @@ void main() {
 }
 
 void init() {
-
   container = document.querySelector('#container');
 
-  camera = new PerspectiveCamera(27.0, window.innerWidth / window.innerHeight, 5.0, 3500.0)..position.z = 2750.0;
+  camera = new PerspectiveCamera(
+      27.0, window.innerWidth / window.innerHeight, 5.0, 3500.0)
+    ..position.z = 2750.0;
 
   scene = new Scene()..fog = new FogLinear(0x050505, 2000.0, 3500.0);
 
   var particles = 500000;
 
-  var positions = new GeometryAttribute.float32(particles * 3, 3);
-  var colors = new GeometryAttribute.float32(particles * 3, 3);
+  // var positions = new GeometryAttributeFloat32(particles * 3, 3);
+  // var colors = new GeometryAttributeFloat32(particles * 3, 3);
+  var positions = float32GeometryAttribute(particles*3, 3);
+  var colors = float32GeometryAttribute(particles*3, 3);
 
   var geometry = new BufferGeometry();
-  geometry.attributes = {
-    "position": positions,
-    "color": colors
-  };
+  geometry.attributes = {"position": positions, "color": colors};
 
   var color = new Color();
 
-  var n = 1000,
-      n2 = n / 2; // particles spread in the cube
+  var n = 1000, n2 = n / 2; // particles spread in the cube
 
   for (var i = 0; i < positions.array.length; i += 3) {
-
     // positions
     var x = rnd.nextDouble() * n - n2;
     var y = rnd.nextDouble() * n - n2;
@@ -71,8 +69,8 @@ void init() {
   scene.add(particleSystem);
 
   renderer = new WebGLRenderer()
-      ..setClearColor(scene.fog.color, 1)
-      ..setSize(window.innerWidth, window.innerHeight);
+    ..setClearColor(scene.fog.color, 1)
+    ..setSize(window.innerWidth, window.innerHeight);
 
   container.children.add(renderer.domElement);
 
@@ -81,8 +79,8 @@ void init() {
 
 onWindowResize(event) {
   camera
-      ..aspect = window.innerWidth / window.innerHeight
-      ..updateProjectionMatrix();
+    ..aspect = window.innerWidth / window.innerHeight
+    ..updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
@@ -93,10 +91,8 @@ animate(num time) {
 }
 
 render() {
-
   particleSystem.rotation.x += 0.0025;
   particleSystem.rotation.y += 0.005;
 
   renderer.render(scene, camera);
-
 }

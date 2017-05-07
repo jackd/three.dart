@@ -21,7 +21,7 @@ List<double> noise;
 
 var rnd = new Math.Random();
 
-var WIDTH = window.innerWidth,
+num WIDTH = window.innerWidth,
     HEIGHT = window.innerHeight;
 
 void main() {
@@ -35,7 +35,7 @@ void init() {
 
   scene = new Scene();
 
-  displacement = new Attribute.float();
+  displacement = floatAttribute();
   attributes = {
     "displacement": displacement
   };
@@ -71,11 +71,11 @@ void init() {
   var vertices = sphere.geometry.vertices;
 
   noise = new List.generate(vertices.length, (_) => rnd.nextDouble() * 5);
-  displacement.value.addAll(new List.filled(vertices.length, 0));
+  displacement.value.addAll(new List.filled(vertices.length, 0.0));
 
   renderer = new WebGLRenderer(clearColorHex: 0x050505, clearAlpha: 1)..setSize(WIDTH, HEIGHT);
 
-  Element container = document.querySelector('#container')..children.add(renderer.domElement);
+  document.querySelector('#container')..children.add(renderer.domElement);
 
   window.onResize.listen(onWindowResize);
 }

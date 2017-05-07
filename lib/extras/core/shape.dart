@@ -20,8 +20,8 @@ class Shape extends Path {
         super(points);
 
   // Convenience method to return ExtrudeGeometry
-  extrude({amount: 100, bevelThickness: 6.0, bevelSize: null, bevelSegments: 3, bevelEnabled: true, curveSegments: 12,
-      steps: 1, bendPath, extrudePath, material, extrudeMaterial}) {
+  extrude({int amount: 100, num bevelThickness: 6.0, num bevelSize: null, int bevelSegments: 3, bool bevelEnabled: true, int curveSegments: 12,
+      steps: 1, CurvePath bendPath, extrudePath, int material, int extrudeMaterial}) {
 
     if (bevelSize == null) bevelSize = bevelThickness - 2.0;
 

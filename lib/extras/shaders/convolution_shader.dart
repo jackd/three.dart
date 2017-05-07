@@ -71,41 +71,41 @@ var ConvolutionShader = {
 
   ].join("\n"),
 
-  'buildKernel': ( double sigma ) {
+  'buildKernel': _buildKernel,
 
-    // We lop off the sqrt(2 * pi) * sigma term, since we're going to normalize anyway.
+};
 
-    double gauss( x, sigma ) {
+List<double> _buildKernel(double sigma) {
 
-      return exp( - ( x * x ) / ( 2.0 * sigma * sigma ) );
+  // We lop off the sqrt(2 * pi) * sigma term, since we're going to normalize anyway.
 
-    }
+  double gauss( x, sigma ) {
 
-    var i;
-    var values;
-    var sum;
-    var halfWidth;
-    var kMaxKernelSize = 25;
-    int kernelSize = 2 * (sigma * 3.0).ceil() + 1;
-
-    if ( kernelSize > kMaxKernelSize ) kernelSize = kMaxKernelSize;
-    halfWidth = ( kernelSize - 1 ) * 0.5;
-
-    values = new List( kernelSize );
-    sum = 0.0;
-    for ( i = 0; i < kernelSize; ++i ) {
-
-      values[ i ] = gauss( i - halfWidth, sigma );
-      sum += values[ i ];
-
-    }
-
-    // normalize the kernel
-
-    for ( i = 0; i < kernelSize; ++i ) values[ i ] /= sum;
-
-    return values;
+    return exp( - ( x * x ) / ( 2.0 * sigma * sigma ) );
 
   }
 
-};
+  var i;
+  List<double> values;
+  var sum;
+  var halfWidth;
+  var kMaxKernelSize = 25;
+  int kernelSize = 2 * (sigma * 3.0).ceil() + 1;
+
+  if ( kernelSize > kMaxKernelSize ) kernelSize = kMaxKernelSize;
+  halfWidth = ( kernelSize - 1 ) * 0.5;
+
+  values = new List( kernelSize );
+  sum = 0.0;
+  for ( i = 0; i < kernelSize; ++i ) {
+
+    sum += (values[i] = gauss( i - halfWidth, sigma ));
+  }
+
+  // normalize the kernel
+
+  for ( i = 0; i < kernelSize; ++i ) values[ i ] /= sum;
+
+  return values;
+
+}

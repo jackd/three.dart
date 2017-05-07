@@ -1,6 +1,8 @@
 import 'dart:html';
+// import 'dart:typed_data';
 import 'dart:math' as Math;
 import 'package:three/three.dart';
+
 
 const TRIANGLES = 500;
 
@@ -26,8 +28,12 @@ void init() {
   scene = new Scene();
 
   var geometry = new BufferGeometry()
-      ..aIndex = new GeometryAttribute.int16(TRIANGLES * 3 * 3)
-      ..aPosition = new GeometryAttribute.float32(TRIANGLES * 3 * 3, 3);
+    ..aIndex = int16GeometryAttribute(TRIANGLES * 3 * 3)
+    ..aPosition = float32GeometryAttribute(TRIANGLES * 3 * 3, 3);
+    // ..aIndex = new GeometryAttributeInt16(TRIANGLES * 3 * 3)
+    // ..aPosition = new GeometryAttributeFloat32(TRIANGLES * 3 * 3);
+      // ..aIndex = new GeometryAttribute.int16(TRIANGLES * 3 * 3)
+      // ..aPosition = new GeometryAttribute.float32(TRIANGLES * 3 * 3, 3);
 
   var indices = geometry.aIndex.array;
   var i = 0;
@@ -90,11 +96,9 @@ animate(num time) {
 }
 
 render() {
-
   mesh.rotation
       ..x += 0.01
       ..y += 0.02;
 
   renderer.render(scene, camera);
-
 }

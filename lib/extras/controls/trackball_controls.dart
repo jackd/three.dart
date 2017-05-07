@@ -24,7 +24,6 @@ class STATE {
 }
 
 class TrackballControls extends EventEmitter {
-
   int _state, _prevState;
   Object3D object;
   dynamic domElement;
@@ -55,7 +54,6 @@ class TrackballControls extends EventEmitter {
   EventEmitterEvent changeEvent, startEvent, endEvent;
 
   TrackballControls(this.object, [Element domElement]) {
-
     this.domElement = (domElement != null) ? domElement : document;
 
     // API
@@ -80,7 +78,7 @@ class TrackballControls extends EventEmitter {
     minDistance = 0;
     maxDistance = double.INFINITY;
 
-    keys = [65 /*A*/, 83 /*S*/, 68 /*D*/ ];
+    keys = [65 /*A*/, 83 /*S*/, 68 /*D*/];
 
     // internals
 
@@ -110,22 +108,20 @@ class TrackballControls extends EventEmitter {
     endEvent = new EventEmitterEvent(type: 'end');
 
     this.domElement
-        ..onContextMenu.listen((event) => event.preventDefault())
-        ..onMouseDown.listen(mousedown)
-        ..onMouseWheel.listen(mousewheel)
-        ..onTouchStart.listen(touchstart)
-        ..onTouchEnd.listen(touchend)
-        ..onTouchMove.listen(touchmove);
+      ..onContextMenu.listen((event) => event.preventDefault())
+      ..onMouseDown.listen(mousedown)
+      ..onMouseWheel.listen(mousewheel)
+      ..onTouchStart.listen(touchstart)
+      ..onTouchEnd.listen(touchend)
+      ..onTouchMove.listen(touchmove);
 
     //this.domElement.addEventListener( 'DOMMouseScroll', mousewheel, false ); // firefox
 
     keydownStream = window.onKeyDown.listen(keydown);
     keyupStream = window.onKeyUp.listen(keyup);
 
-
     handleResize();
   }
-
 
   // methods
   handleResize() {
@@ -136,11 +132,11 @@ class TrackballControls extends EventEmitter {
     }
   }
 
-  getMouseOnScreen(clientX, clientY) =>
-      new Vector2((clientX - screen.left) / screen.width, (clientY - screen.top) / screen.height);
+  getMouseOnScreen(clientX, clientY) => new Vector2(
+      (clientX - screen.left) / screen.width,
+      (clientY - screen.top) / screen.height);
 
   getMouseProjectionOnBall(clientX, clientY) {
-
     var mouseOnBall = new Vector3(
         (clientX - screen.width * 0.5 - screen.left) / (screen.width * 0.5),
         (screen.height * 0.5 + screen.top - clientY) / (screen.height * 0.5),
@@ -149,44 +145,40 @@ class TrackballControls extends EventEmitter {
     var length = mouseOnBall.length;
 
     if (noRoll) {
-
       if (length < Math.SQRT1_2) {
-
         mouseOnBall.z = Math.sqrt(1.0 - length * length);
-
       } else {
-
         mouseOnBall.z = 0.5 / length;
-
       }
-
     } else if (length > 1.0) {
-
       mouseOnBall.normalize();
-
     } else {
-
       mouseOnBall.z = Math.sqrt(1.0 - length * length);
-
     }
 
-    _eye.setFrom(object.position).sub(target);
+    _eye
+      ..setFrom(object.position)
+      ..sub(target);
 
-    Vector3 projection = object.up.clone().normalize().scale(mouseOnBall.y);
-    projection.add(object.up.cross(_eye).normalize().scale(mouseOnBall.x));
-    projection.add(_eye.normalize().scale(mouseOnBall.z));
+    Vector3 projection = object.up.clone()
+      ..normalize()
+      ..scale(mouseOnBall.y);
+    projection.add(object.up.cross(_eye)
+      ..normalize()
+      ..scale(mouseOnBall.x));
+    projection.add(_eye
+      ..normalize()
+      ..scale(mouseOnBall.z));
 
     return projection;
-
   }
 
   rotateCamera() {
-
-    var angle = Math.acos(_rotateStart.dot(_rotateEnd) / _rotateStart.length / _rotateEnd.length);
+    var angle = Math.acos(
+        _rotateStart.dot(_rotateEnd) / _rotateStart.length / _rotateEnd.length);
 
     if (!angle.isNaN && angle != 0) {
-
-      Vector3 axis = _rotateStart.cross(_rotateEnd).normalize();
+      Vector3 axis = _rotateStart.cross(_rotateEnd)..normalize();
       Quaternion quaternion = new Quaternion.identity();
 
       angle *= rotateSpeed;
@@ -199,100 +191,75 @@ class TrackballControls extends EventEmitter {
       quaternion.rotate(_rotateEnd);
 
       if (staticMoving) {
-
         _rotateStart.setFrom(_rotateEnd);
-
       } else {
-
         quaternion.setAxisAngle(axis, -angle * (dynamicDampingFactor - 1.0));
         quaternion.rotate(_rotateStart);
-
       }
-
     }
-
   }
 
   zoomCamera() {
-
     if (_state == STATE.TOUCH_ZOOM_PAN) {
-
       var factor = _touchZoomDistanceStart / _touchZoomDistanceEnd;
 
       _touchZoomDistanceStart = _touchZoomDistanceEnd;
 
       _eye.scale(factor);
-
     } else {
-
       var factor = 1.0 + (_zoomEnd.y - _zoomStart.y) * zoomSpeed;
 
       if (factor != 1.0 && factor > 0.0) {
-
         _eye.scale(factor);
 
         if (staticMoving) {
-
           _zoomStart.setFrom(_zoomEnd);
-
         } else {
-
-          _zoomStart.y += (_zoomEnd.y - _zoomStart.y) * this.dynamicDampingFactor;
-
+          _zoomStart.y +=
+              (_zoomEnd.y - _zoomStart.y) * this.dynamicDampingFactor;
         }
-
       }
-
     }
-
   }
 
   panCamera() {
-
     Vector2 mouseChange = _panEnd - _panStart;
 
     if (mouseChange.length != 0.0) {
-
       mouseChange.scale(_eye.length * panSpeed);
 
-      Vector3 pan = _eye.cross(object.up).normalize().scale(mouseChange.x);
-      pan += object.up.clone().normalize().scale(mouseChange.y);
+      Vector3 pan = _eye.cross(object.up)
+        ..normalize()
+        ..scale(mouseChange.x);
+      pan.add(object.up.clone()
+        ..normalize()
+        ..scale(mouseChange.y));
 
       object.position.add(pan);
       target.add(pan);
 
       if (staticMoving) {
-
         _panStart.setFrom(_panEnd);
-
       } else {
-
-        _panStart += (_panEnd - _panStart).scale(dynamicDampingFactor);
-
+        _panStart.add((_panEnd - _panStart)..scale(dynamicDampingFactor));
       }
-
     }
-
   }
 
   checkDistances() {
-
     if (!noZoom || !noPan) {
-
       if (object.position.length2 > maxDistance * maxDistance) {
-
-        object.position.normalize().scale(maxDistance);
-
+        object.position
+          ..normalize()
+          ..scale(maxDistance);
       }
 
       if (_eye.length2 < minDistance * minDistance) {
-
-        object.position = target + _eye.normalize().scale(minDistance);
-
+        object.position = target + _eye
+          ..normalize()
+          ..scale(minDistance);
       }
-
     }
-
   }
 
   void triggerAutoUpdate() {
@@ -302,8 +269,9 @@ class TrackballControls extends EventEmitter {
   }
 
   update() {
-
-    _eye.setFrom(object.position).sub(target);
+    _eye
+      ..setFrom(object.position)
+      ..sub(target);
 
     if (!noRotate) {
       rotateCamera();
@@ -329,15 +297,12 @@ class TrackballControls extends EventEmitter {
       dispatchEvent(changeEvent);
 
       lastPosition.setFrom(object.position);
-
     }
-
   }
 
   // listeners
 
   keydown(KeyboardEvent event) {
-
     if (!enabled) return;
 
     keydownStream.cancel();
@@ -345,27 +310,17 @@ class TrackballControls extends EventEmitter {
     _prevState = _state;
 
     if (_state != STATE.NONE) {
-
       return;
-
     } else if (event.keyCode == keys[STATE.ROTATE] && !noRotate) {
-
       _state = STATE.ROTATE;
-
     } else if (event.keyCode == keys[STATE.ZOOM] && !noZoom) {
-
       _state = STATE.ZOOM;
-
     } else if (event.keyCode == keys[STATE.PAN] && !noPan) {
-
       _state = STATE.PAN;
-
     }
-
   }
 
   keyup(KeyboardEvent event) {
-
     if (!enabled) {
       return;
     }
@@ -373,11 +328,9 @@ class TrackballControls extends EventEmitter {
     _state = _prevState;
 
     keydownStream = window.onKeyDown.listen(keydown);
-
   }
 
   mousedown(MouseEvent event) {
-
     if (!enabled) {
       return;
     }
@@ -386,59 +339,43 @@ class TrackballControls extends EventEmitter {
     event.stopPropagation();
 
     if (_state == STATE.NONE) {
-
       _state = event.button;
     }
 
     if (_state == STATE.ROTATE && !noRotate) {
-
       _rotateStart = getMouseProjectionOnBall(event.client.x, event.client.y);
       _rotateEnd.setFrom(_rotateStart);
-
     } else if (_state == STATE.ZOOM && !noZoom) {
-
       _zoomStart = getMouseOnScreen(event.client.x, event.client.y);
       _zoomEnd.setFrom(_zoomStart);
-
     } else if (_state == STATE.PAN && !noPan) {
-
       _panStart = getMouseOnScreen(event.client.x, event.client.y);
       _panEnd.setFrom(_panStart);
-
     }
 
     mouseMoveStream = document.onMouseMove.listen(mousemove);
     mouseUpStream = document.onMouseUp.listen(mouseup);
 
     dispatchEvent(startEvent);
-
   }
 
   mousemove(MouseEvent event) {
-
     if (!enabled) {
       return;
     }
 
     if (_state == STATE.ROTATE && !noRotate) {
-
       _rotateEnd = getMouseProjectionOnBall(event.client.x, event.client.y);
-
     } else if (_state == STATE.ZOOM && !noZoom) {
-
       _zoomEnd = getMouseOnScreen(event.client.x, event.client.y);
-
     } else if (_state == STATE.PAN && !noPan) {
-
       _panEnd = getMouseOnScreen(event.client.x, event.client.y);
-
     }
 
     triggerAutoUpdate();
   }
 
   mouseup(MouseEvent event) {
-
     if (!enabled) {
       return;
     }
@@ -455,7 +392,6 @@ class TrackballControls extends EventEmitter {
   }
 
   mousewheel(WheelEvent event) {
-
     if (!enabled) {
       return;
     }
@@ -463,17 +399,17 @@ class TrackballControls extends EventEmitter {
     event.preventDefault();
     event.stopPropagation();
 
-    var delta = 0;
+    var delta = 0.0;
 
     // TODO(nelsonsilva) - check this!
-    if (event.deltaY != 0) { // WebKit / Opera / Explorer 9
+    if (event.deltaY != 0) {
+      // WebKit / Opera / Explorer 9
 
       delta = event.deltaY / 40;
-
-    } else if (event.detail != 0) { // Firefox
+    } else if (event.detail != 0) {
+      // Firefox
 
       delta = -event.detail / 3;
-
     }
 
     _zoomStart.y += (1 / delta) * 0.05;
@@ -485,7 +421,6 @@ class TrackballControls extends EventEmitter {
   }
 
   touchstart(TouchEvent event) {
-
     if (!enabled) {
       return;
     }
@@ -493,17 +428,18 @@ class TrackballControls extends EventEmitter {
     event.preventDefault();
 
     switch (event.touches.length) {
-
       case 1:
         _state = STATE.TOUCH_ROTATE;
-        _rotateStart = getMouseProjectionOnBall(event.touches[0].page.x, event.touches[0].page.y);
+        _rotateStart = getMouseProjectionOnBall(
+            event.touches[0].page.x, event.touches[0].page.y);
         _rotateEnd.setFrom(_rotateStart);
         break;
       case 2:
         _state = STATE.TOUCH_ZOOM_PAN;
         var dx = event.touches[0].page.x - event.touches[1].page.x;
         var dy = event.touches[0].page.y - event.touches[1].page.y;
-        _touchZoomDistanceEnd = _touchZoomDistanceStart = Math.sqrt(dx * dx + dy * dy);
+        _touchZoomDistanceEnd =
+            _touchZoomDistanceStart = Math.sqrt(dx * dx + dy * dy);
 
         var x = (event.touches[0].page.x + event.touches[1].page.x) / 2;
         var y = (event.touches[0].page.y + event.touches[1].page.y) / 2;
@@ -519,7 +455,6 @@ class TrackballControls extends EventEmitter {
   }
 
   touchmove(TouchEvent event) {
-
     if (!enabled) {
       return;
     }
@@ -527,9 +462,9 @@ class TrackballControls extends EventEmitter {
     event.preventDefault();
 
     switch (event.touches.length) {
-
       case 1:
-        _rotateEnd = getMouseProjectionOnBall(event.touches[0].page.x, event.touches[0].page.y);
+        _rotateEnd = getMouseProjectionOnBall(
+            event.touches[0].page.x, event.touches[0].page.y);
         break;
       case 2:
         var dx = event.touches[0].page.x - event.touches[1].page.x;
@@ -543,22 +478,20 @@ class TrackballControls extends EventEmitter {
       default:
         _state = STATE.NONE;
         break;
-
     }
 
     triggerAutoUpdate();
   }
 
   touchend(TouchEvent event) {
-
     if (!enabled) {
       return;
     }
 
     switch (event.touches.length) {
-
       case 1:
-        _rotateEnd = getMouseProjectionOnBall(event.touches[0].page.x, event.touches[0].page.y);
+        _rotateEnd = getMouseProjectionOnBall(
+            event.touches[0].page.x, event.touches[0].page.y);
         _rotateStart.setFrom(_rotateEnd);
         break;
 
@@ -570,13 +503,11 @@ class TrackballControls extends EventEmitter {
         _panEnd = getMouseOnScreen(x, y);
         _panStart.setFrom(_panEnd);
         break;
-
     }
 
     _state = STATE.NONE;
 
     dispatchEvent(endEvent);
-
   }
 
   void unlisten() {

@@ -98,10 +98,10 @@ void init() {
 
   var rnd = new Math.Random();
 
-  var line = new THREE.LineCurve3(new Vector3.zero(), new Vector3(100.0, 0.0, 0.0));
-  var line2 = new THREE.LineCurve3(new Vector3(100.0, 0.0, 0.0), new Vector3(200.0, 50.0, 0.0));
+  var line = new THREE.LineCurve<Vector3>(new Vector3.zero(), new Vector3(100.0, 0.0, 0.0));
+  var line2 = new THREE.LineCurve<Vector3>(new Vector3(100.0, 0.0, 0.0), new Vector3(200.0, 50.0, 0.0));
 
-  var curvepath = new THREE.CurvePath();
+  var curvepath = new THREE.CurvePath<Vector3>();
   curvepath.add(line);
   curvepath.add(line2);
 
@@ -126,7 +126,7 @@ void init() {
 
   for (var curve in curvepath.curves) {
 
-    if (curve is THREE.LineCurve3) {
+    if (curve is THREE.LineCurve<Vector3>) {
       // Straight so we only need one step
       initU += (curve.length ~/ curvepathLength);
       extrudeUSteps.add(initU);
@@ -249,7 +249,7 @@ onDocumentMouseDown(MouseEvent event) {
 
 onDocumentMouseMove(MouseEvent event) {
   mouseX = event.client.x - windowHalfX;
-  targetRotation = targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.02;
+  targetRotation = (targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.02).toInt();
 }
 
 onDocumentMouseUp(event) {
@@ -280,7 +280,7 @@ onDocumentTouchMove(TouchEvent event) {
     event.preventDefault();
 
     mouseX = event.touches[0].page.x - windowHalfX;
-    targetRotation = targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.05;
+    targetRotation = (targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.05).toInt();
 
   }
 

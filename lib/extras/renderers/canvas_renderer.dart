@@ -16,7 +16,7 @@ import 'package:vector_math/vector_math.dart';
 class CanvasRenderer implements Renderer {
   Element domElement;
 
-  bool _autoClear, _sortObjects, _sortElements;
+  bool _autoClear, _sortElements;
   num _canvasWidth, _canvasHeight, _canvasWidthHalf, _canvasHeightHalf;
 
   Color _clearColor;
@@ -61,7 +61,7 @@ class CanvasRenderer implements Renderer {
   bool _enableLighting;
   Color _ambientLight, _directionalLights, _pointLights;
 
-  final num _pi2 = Math.PI * 2;
+  // final num _pi2 = Math.PI * 2;
   Vector3 _vector3; // Needed for PointLight
 
   var _pixelMapImage, _pixelMapData;
@@ -77,9 +77,9 @@ class CanvasRenderer implements Renderer {
 
   bool debug;
 
-  set sortObjects(bool value) {
-    _sortObjects = value;
-  }
+  // set sortObjects(bool value) {
+  //   _sortObjects = value;
+  // }
 
   CanvasRenderer([Map parameters]) {
     parameters = parameters != null ? parameters : {};
@@ -151,7 +151,7 @@ class CanvasRenderer implements Renderer {
     domElement = _canvas;
 
     _autoClear = true;
-    _sortObjects = true;
+    // _sortObjects = true;
     _sortElements = true;
 
     _info = new CanvasRenderData();
@@ -459,7 +459,7 @@ class CanvasRenderer implements Renderer {
 
         lightPosition = light.matrixWorld.getTranslation();
 
-        _vector3 = (lightPosition - position).normalize();
+        _vector3 = (lightPosition - position)..normalize();
         amount = normal.dot(_vector3);
 
         if (amount <= 0) continue;
@@ -924,7 +924,7 @@ class CanvasRenderer implements Renderer {
         fillPath(_color);
       }
     } else if (material is MeshDepthMaterial) {
-      MeshDepthMaterial mdMaterial = material;
+      // MeshDepthMaterial mdMaterial = material;
 
       _near = _camera.near;
       _far = _camera.far;
@@ -1303,6 +1303,3 @@ _info = {
            "faces": 0
          }
 */
-
-
-

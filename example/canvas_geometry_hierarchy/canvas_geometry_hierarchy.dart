@@ -72,7 +72,7 @@ void init() {
 
   renderer = new CanvasRenderer(options);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.sortObjects = false;
+  // renderer.sortObjects = false;
   //container.appendChild( renderer.domElement );
   container.nodes.add(renderer.domElement);
 

@@ -1,6 +1,6 @@
 part of three;
 
-class QuadraticBezierCurve extends Curve2D {
+class QuadraticBezierCurve extends Curve<Vector2> {
 
   Vector2 v0, v1, v2;
 
@@ -25,6 +25,6 @@ class QuadraticBezierCurve extends Curve2D {
     ty = CurveUtils.tangentQuadraticBezier(t, v0.y, v1.y, v2.y);
 
     // returns unit vector
-    return new Vector2(tx, ty).normalize();
+    return new Vector2(tx, ty)..normalize();
   }
 }

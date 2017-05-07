@@ -23,7 +23,7 @@ part of three;
 /// Depth is based off of the camera near and far plane.
 /// White is nearest, black is farthest.
 class MeshDepthMaterial extends Material implements Wireframe {
-  Map _parameters;
+  // Map _parameters;
   int shading;
 
   /// Render geometry as wireframe. Default is false (i.e. render as smooth shaded).

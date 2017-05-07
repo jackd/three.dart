@@ -57,9 +57,9 @@ class EffectComposer {
         if (maskActive) {
           var context = renderer.context;
 
-          context.stencilFunc(context.NOTEQUAL, 1, 0xffffffff);
+          context.stencilFunc(gl.RenderingContext.NOTEQUAL, 1, 0xffffffff);
           copyPass.render(renderer, writeTarget, readTarget, delta, maskActive);
-          context.stencilFunc(context.EQUAL, 1, 0xffffffff);
+          context.stencilFunc(gl.RenderingContext.EQUAL, 1, 0xffffffff);
         }
 
         swapBuffers();

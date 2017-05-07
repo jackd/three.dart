@@ -160,8 +160,8 @@ void onWindowResize(Event event) {
 void createScene(Geometry geometry) {
   double x = 0.0,
       y = -15.0,
-      z = 0.0,
-      b = 0.0;
+      z = 0.0;
+      // b = 0.0;
 
   MeshBasicMaterial zmat = new MeshBasicMaterial();
   Mesh zmesh = new Mesh(geometry, zmat)
@@ -217,7 +217,7 @@ render(double time) {
   oldTime = time;
 }
 
-void animate(double time) {
+void animate(num time) {
   stats.begin();
   render(time);
   stats.end();

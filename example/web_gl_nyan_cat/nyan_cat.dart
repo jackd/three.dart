@@ -12,9 +12,9 @@ var stars,
     numRainChunks = 30;
 var mouseX = 0,
     mouseY = 0;
-var windowHalfX = window.innerWidth / 2;
-var windowHalfY = window.innerHeight / 2;
-var deltaSum = 0,
+double windowHalfX = window.innerWidth / 2;
+double windowHalfY = window.innerHeight / 2;
+var deltaSum = 0.0,
     tick = 0,
     frame = 0,
     running = true;

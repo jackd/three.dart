@@ -65,9 +65,9 @@ class JSONLoader extends Loader {
         if (callbackProgress != null) {
 
           if (length == 0) {
-
-            length = xhr.getResponseHeader("Content-Length");
-
+            // length = int.parse(xhr.getResponseHeader("Content-Length"));
+            var header = xhr.getResponseHeader("Content-Length");
+            length = header == null? null: int.parse(header);
           }
 
           callbackProgress({
@@ -78,9 +78,9 @@ class JSONLoader extends Loader {
         }
 
       } else if (xhr.readyState == HttpRequest.HEADERS_RECEIVED) {
-
-        length = xhr.getResponseHeader("Content-Length");
-
+        // length = xhr.getResponseHeader("Content-Length");
+        var header = xhr.getResponseHeader("Content-Length");
+        length = header == null? null: int.parse(header);
       }
 
     });
@@ -387,7 +387,7 @@ class JSONLoader extends Loader {
 
     if (json.containsKey("morphTargets")) {
 
-      var i, l, v, vl, dstVertices, srcVertices;
+      var i, v, vl, dstVertices, srcVertices;
 
       geometry.morphTargets = new List(json["morphTargets"].length);
 
@@ -416,7 +416,7 @@ class JSONLoader extends Loader {
 
     if (json.containsKey("morphColors")) {
 
-      var i, l, c, cl, dstColors, srcColors, color;
+      var i, c, cl, dstColors, srcColors, color;
 
       geometry.morphColors = new List(json["morphColors"].length);
 

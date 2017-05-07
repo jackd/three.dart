@@ -37,7 +37,9 @@ init() {
   scene.add(ambient);
 
   dirLight = new DirectionalLight(0x4444cc);
-  dirLight.position.setValues(1.0, -1.0, 1.0).normalize();
+  dirLight.position
+    ..setValues(1.0, -1.0, 1.0)
+    ..normalize();
   scene.add(dirLight);
 
   spot1 = new SpotLight(0x8888FF, 2.0);
@@ -64,7 +66,7 @@ init() {
   scene.add(sundial);
 
   // var geometry  = new TorusGeometry( 2, 1, 16, 32 );
-  var geometry = new TorusKnotGeometry(25.0, 8.0, 75, 20);
+  Geometry geometry = new TorusKnotGeometry(25.0, 8.0, 75, 20);
   //var geometry  = new THREE.OctahedronGeometry( 1, 1 );
   //var geometry  = new THREE.CubeGeometry( 3, 3, 3 );
   //var geometry  = new THREE.SphereGeometry( 3, 32,16 );
@@ -136,7 +138,7 @@ render() {
   // update camera controls
   cameraControls.update();
   // limit camera position to avoid showing shadow on backface
-  camera.position.y = Math.max(camera.position.y, 3.0);
+  camera.position.y = Math.max<double>(camera.position.y, 3.0);
 
   // actually render the scene
   renderer.render(scene, camera);
@@ -146,4 +148,3 @@ void main() {
   init();
   animate(0);
 }
-

@@ -10,7 +10,7 @@ part of three;
 class MTLLoader {
 
   String _baseUrl = '';
-  HashMap _options = {};
+  HashMap _options = new HashMap();
   String _crossOrigin = '';
 
   /// Creates a new MTLLoader
@@ -29,7 +29,7 @@ class MTLLoader {
   /// Parses [text] loaded MTL file
   MaterialCreator parse(String text) {
     List<String> lines = text.split("\n");
-    HashMap info = {};
+    HashMap info = new HashMap();
     var delimiter_pattern = new RegExp(r"\s+");
     var materialsInfo = {};
 
@@ -74,8 +74,8 @@ class MaterialCreator {
   String _crossOrigin = "";
   HashMap _materialsInfo;
   HashMap _materials;
-  List _materialsArray;
-  HashMap _nameLookup;
+  // List _materialsArray;
+  // HashMap _nameLookup;
 
   int _side = FrontSide;
   int _wrap = RepeatWrapping;
@@ -108,21 +108,21 @@ class MaterialCreator {
   /// Inits [MaterialCreator]
   void set materials(HashMap materialsInfo) {
     this._materialsInfo = _convert(materialsInfo);
-    this._materials = {};
-    this._materialsArray = [];
-    this._nameLookup = {};
+    this._materials = new HashMap();
+    // this._materialsArray = [];
+    // this._nameLookup = new HashMap();
   }
 
   HashMap _convert(HashMap materialsInfo) {
     if (this._options == null) {
       return materialsInfo;
     }
-    HashMap converted = {};
+    HashMap converted = new HashMap();
 
     for (var mn in materialsInfo.keys) {
       // Convert materials info into normalized form based on options
       HashMap mat = materialsInfo[mn];
-      HashMap covmat = {};
+      HashMap covmat = new HashMap();
 
       converted[mn] = covmat;
       for (String prop in mat.keys) {
@@ -169,26 +169,26 @@ class MaterialCreator {
 
   /// Creates in cache all creation for this material.
   Future preload() {
-    var futures = new List();
+    var futures = new List<Future>();
     for (var mn in this._materialsInfo.keys) {
       futures.add(create(mn));
     }
     return Future.wait(futures);
   }
 
-  Material _getIndex(String materialName) {
-    return this._nameLookup[materialName];
-  }
+  // Material _getIndex(String materialName) {
+  //   return this._nameLookup[materialName];
+  // }
 
-  List _getAsArray() {
-    var index = 0;
-    for (var mn in this._materialsInfo) {
-      this._materialsArray[index] = create(mn);
-      this._nameLookup[mn] = index;
-      index++;
-    }
-    return this._materialsArray;
-  }
+  // List _getAsArray() {
+  //   var index = 0;
+  //   for (var mn in this._materialsInfo.keys) {
+  //     this._materialsArray[index] = create(mn);
+  //     this._nameLookup[mn] = index;
+  //     index++;
+  //   }
+  //   return this._materialsArray;
+  // }
 
   /// Creates a [Material] from a name.
   ///
@@ -266,9 +266,9 @@ class MaterialCreator {
     var completer = new Completer();
     if (mapLoaded != null) {
       mapLoaded.then((e) {
-        params['map'] = e;
-        params['map'].wrapS = this._wrap;
-        params['map'].wrapT = this._wrap;
+        params['map'] = e
+          ..wrapS = _wrap
+          ..wrapT = _wrap;
         var material = _createMeshPhongMaterial(params);
         _materials[materialName] = material;
         completer.complete(material);
@@ -309,14 +309,16 @@ class MaterialCreator {
     return completer.future;
   }
 
-  ImageElement _ensurePowerOfTwo(ImageElement image) {
+  CanvasImageSource _ensurePowerOfTwo(ImageElement image) {
     if (!_isPowerOfTwo(image.width) || !_isPowerOfTwo(image.height)) {
-      var canvas = document.createElement("canvas");
+      // var canvas = document.createElement("canvas");
+      var canvas = new CanvasElement();
       canvas.width = _nextHighestPowerOfTwo(image.width);
       canvas.height = _nextHighestPowerOfTwo(image.height);
 
-      var ctx = canvas.getContext("2d");
-      ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+      // var ctx = canvas.getContext("2d");
+      // ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+      canvas.context2D.drawImage(image, canvas.width, canvas.height);
       return canvas;
     }
     return image;

@@ -41,7 +41,7 @@ class Bone extends Object3D {
     }
 
     // update children
-    children.forEach((c) => c.update(skinMatrix, forceUpdate));
+    children.forEach((c) => (c as Bone).update(skinMatrix, forceUpdate));
 
   }
 }

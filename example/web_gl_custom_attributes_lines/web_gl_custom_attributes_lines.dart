@@ -12,7 +12,7 @@ var uniforms, amplitude, opacity, color;
 var attributes, displacement, customColor;
 
 var text = "three.dart",
-    height = 15.0,
+    height = 15,
     size = 50,
 
     curveSegments = 10,
@@ -50,8 +50,8 @@ void init() {
 
   scene = new Scene();
 
-  displacement = new Attribute.vector3();
-  customColor = new Attribute.color();
+  displacement = vector3Attribute();
+  customColor = colorAttribute();
 
   attributes = {
     "displacement": displacement,

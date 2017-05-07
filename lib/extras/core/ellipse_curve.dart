@@ -1,6 +1,6 @@
 part of three;
 
-class EllipseCurve extends Curve2D {
+class EllipseCurve extends Curve<Vector2> {
   num aX, aY;
   num xRadius, yRadius;
   num aStartAngle, aEndAngle;

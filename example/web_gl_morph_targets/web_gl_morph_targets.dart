@@ -20,7 +20,7 @@ void main() {
 void init() {
 
   var idx = 0;
-  querySelectorAll("input[type='range']").forEach((InputElement input) {
+  (querySelectorAll("input[type='range']") as List<InputElement>).forEach((InputElement input) {
     var n = idx++;
     input.onChange.listen((_) => mesh.morphTargetInfluences[n] = input.valueAsNumber / 100);
   });

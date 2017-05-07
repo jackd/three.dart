@@ -80,7 +80,6 @@ class ShadowMapPlugin {
         shadowMap,
         shadowMatrix,
         shadowCamera,
-        program,
         buffer,
         material,
         webglObject,
@@ -127,7 +126,7 @@ class ShadowMapPlugin {
 
         for (n = 0; n < light.shadowCascadeCount; n++) {
 
-          if (!light.shadowCascadeArray[n]) {
+          if (light.shadowCascadeArray[n] == null) {
 
             virtualLight = createVirtualLight(light, n);
             virtualLight.originalCamera = camera;
@@ -540,4 +539,3 @@ class VirtualLight extends DirectionalLight {
         pointsFrustum = [],
         super(0);
 }
-

@@ -1,6 +1,6 @@
 part of three;
 
-class ClosedSplineCurve3 extends Curve3D {
+class ClosedSplineCurve3 extends Curve<Vector3> {
 
   List<Vector3> points;
 

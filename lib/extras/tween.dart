@@ -64,7 +64,7 @@ class Tween {
   num _duration = 1000;
   num _delayTime = 0;
   num _startTime = null;
-  Function _easingFunction = Easing.Linear.None;
+  Function _easingFunction = Easing.Linear.none;
   Function _interpolationFunction = Interpolation.Linear;
   List _chainedTweens = [];
   Function _onStartCallback = null;
@@ -248,14 +248,15 @@ class Interpolation {
 
 class _EasingLinear {
   const _EasingLinear();
-  None(k) => k;
+  num none(num k) => k;
 }
 
 class _EasingQuadratic {
   const _EasingQuadratic();
-  In(k) => k * k;
-  Out(k) => k * (2 - k);
-  InOut(k) {
+
+  num easeIn(num k) => k*k;
+  num easeOut(num k) => k * (2 - k);
+  num easeInOut(num k) {
     if ((k *= 2) < 1) return 0.5 * k * k;
     return -0.5 * (--k * (k - 2) - 1);
   }
@@ -263,9 +264,9 @@ class _EasingQuadratic {
 
 class _EasingExponential {
   const _EasingExponential();
-  In(k) => k == 0 ? 0 : Math.pow(1024, k - 1);
-  Out(k) => k == 1 ? 1 : 1 - Math.pow(2, -10 * k);
-  InOut(k) {
+  num easeIn(num k) => k == 0 ? 0 : Math.pow(1024, k - 1);
+  num easeOut(num k) => k == 1 ? 1 : 1 - Math.pow(2, -10 * k);
+  num easeInOut(k) {
     if (k == 0) return 0;
     if (k == 1) return 1;
     if ((k *= 2) < 1) return 0.5 * Math.pow(1024, k - 1);
@@ -276,4 +277,3 @@ class _EasingExponential {
 class _InterpolationUtils {
   static Linear(p0, p1, t) => (p1 - p0) * t + p0;
 }
-

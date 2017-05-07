@@ -56,7 +56,7 @@ class ShapeGeometry extends Geometry {
     // set UV generator
     var uvgen = (UVGenerator != null) ? UVGenerator : new ExtrudeGeometryWorldUVGenerator();
 
-    var i, hole, s;
+    var i, hole;
 
     var shapesOffset = this.vertices.length;
     var shapePoints = shape.extractPoints(curveSegments);
@@ -92,8 +92,6 @@ class ShapeGeometry extends Geometry {
 
     // Vertices
 
-    var contour = vertices;
-
     for (i = 0; i < holes.length; i++) {
 
       hole = holes[i];
@@ -109,15 +107,10 @@ class ShapeGeometry extends Geometry {
         vlen = vertices.length;
     var face,
         flen = faces.length;
-    var cont,
-        clen = contour.length;
 
     for (i = 0; i < vlen; i++) {
-
       vert = vertices[i];
-
       this.vertices.add(new Vector3((vert.x).toDouble(), (vert.y).toDouble(), 0.0));
-
     }
 
     for (i = 0; i < flen; i++) {
@@ -134,5 +127,3 @@ class ShapeGeometry extends Geometry {
     }
   }
 }
-
-

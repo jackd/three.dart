@@ -1,4 +1,4 @@
-import 'dart:html' hide Path;
+import 'dart:html';
 import 'dart:math' as Math;
 import 'package:vector_math/vector_math.dart';
 import 'package:three/three.dart';
@@ -16,8 +16,8 @@ var mouseX = 0;
 var mouseXOnMouseDown = 0;
 var mouseEvts = [];
 
-var targetRotation = 0;
-var targetRotationOnMouseDown = 0;
+var targetRotation = 0.0;
+var targetRotationOnMouseDown = 0.0;
 
 Object3D parent, text, plane;
 
@@ -227,13 +227,13 @@ void init() {
   rectShape.lineTo(rectLength, 0.0);
   rectShape.lineTo(0.0, 0.0);
 
-  var rect3d = rectShape.extrude(
-      amount: extrude_amount,
-      bevelSegments: extrude_bevelSegments,
-      bevelEnabled: extrude_bevelEnabled,
-      steps: extrude_steps);
-  var rectPoints = rectShape.createPointsGeometry();
-  var rectSpacedPoints = rectShape.createSpacedPointsGeometry();
+  // var rect3d = rectShape.extrude(
+  //     amount: extrude_amount,
+  //     bevelSegments: extrude_bevelSegments,
+  //     bevelEnabled: extrude_bevelEnabled,
+  //     steps: extrude_steps);
+  // var rectPoints = rectShape.createPointsGeometry();
+  // var rectSpacedPoints = rectShape.createSpacedPointsGeometry();
 
   // Rounded rectangle
 

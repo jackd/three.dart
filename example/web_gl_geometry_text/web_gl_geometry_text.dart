@@ -18,7 +18,7 @@ var textMesh1, textMesh2, textGeo, material, parent;
 
 var firstLetter = true,
     text = "three.dart",
-    height = 20.0,
+    height = 20,
     size = 70,
     hover = 30.0,
 
@@ -35,8 +35,8 @@ var firstLetter = true,
 
     mirror = true,
 
-    targetRotation = 0,
-    targetRotationOnMouseDown = 0,
+    targetRotation = 0.0,
+    targetRotationOnMouseDown = 0.0,
 
     mouseX = 0,
     mouseXOnMouseDown = 0,
@@ -90,7 +90,10 @@ void init() {
 
   // LIGHTS
 
-  var dirLight = new DirectionalLight(0xffffff, 0.125)..position.setValues(0.0, 0.0, 1.0).normalize();
+  var dirLight = new DirectionalLight(0xffffff, 0.125);
+  dirLight.position
+    ..setValues(0.0, 0.0, 1.0)
+    ..normalize();
   scene.add(dirLight);
 
   var pointLight = new PointLight(0xffffff, intensity: 1.5)..position.setValues(0.0, 100.0, 90.0);
@@ -284,7 +287,7 @@ createText() {
 
         ..position.x = centerOffset
         ..position.y = -hover
-        ..position.z = height
+        ..position.z = height.toDouble()
 
         ..rotation.x = Math.PI
         ..rotation.y = Math.PI * 2.0;
@@ -302,7 +305,7 @@ refreshText() {
   parent.remove(textMesh1);
   if (mirror) parent.remove(textMesh2);
 
-  if (!text) return;
+  if (text != '') return;
 
   createText();
 

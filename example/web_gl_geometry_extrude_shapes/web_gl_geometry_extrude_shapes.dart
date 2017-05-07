@@ -1,4 +1,4 @@
-import 'dart:html' hide Path;
+import 'dart:html';
 import 'dart:math' as Math;
 import 'package:vector_math/vector_math.dart';
 import 'package:three/three.dart';
@@ -15,8 +15,8 @@ var mouseX = 0;
 var mouseXOnMouseDown = 0;
 var mouseEvts = [];
 
-var targetRotation = 0;
-var targetRotationOnMouseDown = 0;
+var targetRotation = 0.0;
+var targetRotationOnMouseDown = 0.0;
 
 Object3D parent, text, plane;
 
@@ -82,52 +82,52 @@ void init() {
 
   extrude_bevelEnabled = false;
 
-  var extrudeBend = new SplineCurve3( //Closed
-  [
-      new Vector3(30.0, 12.0, 83.0),
-      new Vector3(40.0, 20.0, 67.0),
-      new Vector3(60.0, 40.0, 99.0),
-      new Vector3(10.0, 60.0, 49.0),
-      new Vector3(25.0, 80.0, 40.0)]);
-
-  var pipeSpline = new SplineCurve3(
-      [
-          new Vector3(0.0, 10.0, -10.0),
-          new Vector3(10.0, 0.0, -10.0),
-          new Vector3(20.0, 0.0, 0.0),
-          new Vector3(30.0, 0.0, 10.0),
-          new Vector3(30.0, 0.0, 20.0),
-          new Vector3(20.0, 0.0, 30.0),
-          new Vector3(10.0, 0.0, 30.0),
-          new Vector3(0.0, 0.0, 30.0),
-          new Vector3(-10.0, 10.0, 30.0),
-          new Vector3(-10.0, 20.0, 30.0),
-          new Vector3(0.0, 30.0, 30.0),
-          new Vector3(10.0, 30.0, 30.0),
-          new Vector3(20.0, 30.0, 15.0),
-          new Vector3(10.0, 30.0, 10.0),
-          new Vector3(0.0, 30.0, 10.0),
-          new Vector3(-10.0, 20.0, 10.0),
-          new Vector3(-10.0, 10.0, 10.0),
-          new Vector3(0.0, 0.0, 10.0),
-          new Vector3(10.0, -10.0, 10.0),
-          new Vector3(20.0, -15.0, 10.0),
-          new Vector3(30.0, -15.0, 10.0),
-          new Vector3(40.0, -15.0, 10.0),
-          new Vector3(50.0, -15.0, 10.0),
-          new Vector3(60.0, 0.0, 10.0),
-          new Vector3(70.0, 0.0, 0.0),
-          new Vector3(80.0, 0.0, 0.0),
-          new Vector3(90.0, 0.0, 0.0),
-          new Vector3(100.0, 0.0, 0.0)]);
-
-  var sampleClosedSpline = new ClosedSplineCurve3(
-      [
-          new Vector3(0.0, -40.0, -40.0),
-          new Vector3(0.0, 40.0, -40.0),
-          new Vector3(0.0, 140.0, -40.0),
-          new Vector3(0.0, 40.0, 40.0),
-          new Vector3(0.0, -40.0, 40.0),]);
+  // var extrudeBend = new SplineCurve3( //Closed
+  // [
+  //     new Vector3(30.0, 12.0, 83.0),
+  //     new Vector3(40.0, 20.0, 67.0),
+  //     new Vector3(60.0, 40.0, 99.0),
+  //     new Vector3(10.0, 60.0, 49.0),
+  //     new Vector3(25.0, 80.0, 40.0)]);
+  //
+  // var pipeSpline = new SplineCurve3(
+  //     [
+  //         new Vector3(0.0, 10.0, -10.0),
+  //         new Vector3(10.0, 0.0, -10.0),
+  //         new Vector3(20.0, 0.0, 0.0),
+  //         new Vector3(30.0, 0.0, 10.0),
+  //         new Vector3(30.0, 0.0, 20.0),
+  //         new Vector3(20.0, 0.0, 30.0),
+  //         new Vector3(10.0, 0.0, 30.0),
+  //         new Vector3(0.0, 0.0, 30.0),
+  //         new Vector3(-10.0, 10.0, 30.0),
+  //         new Vector3(-10.0, 20.0, 30.0),
+  //         new Vector3(0.0, 30.0, 30.0),
+  //         new Vector3(10.0, 30.0, 30.0),
+  //         new Vector3(20.0, 30.0, 15.0),
+  //         new Vector3(10.0, 30.0, 10.0),
+  //         new Vector3(0.0, 30.0, 10.0),
+  //         new Vector3(-10.0, 20.0, 10.0),
+  //         new Vector3(-10.0, 10.0, 10.0),
+  //         new Vector3(0.0, 0.0, 10.0),
+  //         new Vector3(10.0, -10.0, 10.0),
+  //         new Vector3(20.0, -15.0, 10.0),
+  //         new Vector3(30.0, -15.0, 10.0),
+  //         new Vector3(40.0, -15.0, 10.0),
+  //         new Vector3(50.0, -15.0, 10.0),
+  //         new Vector3(60.0, 0.0, 10.0),
+  //         new Vector3(70.0, 0.0, 0.0),
+  //         new Vector3(80.0, 0.0, 0.0),
+  //         new Vector3(90.0, 0.0, 0.0),
+  //         new Vector3(100.0, 0.0, 0.0)]);
+  //
+  // var sampleClosedSpline = new ClosedSplineCurve3(
+  //     [
+  //         new Vector3(0.0, -40.0, -40.0),
+  //         new Vector3(0.0, 40.0, -40.0),
+  //         new Vector3(0.0, 140.0, -40.0),
+  //         new Vector3(0.0, 40.0, 40.0),
+  //         new Vector3(0.0, -40.0, 40.0),]);
 
   var randomPoints = [];
   var rnd = new Math.Random();

@@ -138,7 +138,7 @@ void render(double time) {
   oldTime = time;
 }
 
-void animate(double time) {
+void animate(num time) {
   stats.begin();
   render(time);
   stats.end();

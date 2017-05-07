@@ -9,30 +9,33 @@ part of three;
  * @author rob silverton / http://www.unwrong.com/
  */
 
-abstract class GeometryObject {
-
-}
+abstract class GeometryObject {}
 //get _hasGeometry => (object i;
 
 /// Base class for scene graph objects.
 class Object3D {
   /// unique number for this object instance.
   int id;
+
   /// Optional name of the object (doesn't need to be unique).
   String name;
   Map properties;
 
   ///  Object's parent in the scene graph.
   Object3D parent;
+
   /// Object's children.
-  List children;
+  List<Object3D> children;
 
   /// Up direction.
   Vector3 up;
+
   /// Object's local position.
   Vector3 position;
+
   /// Object's local rotation (Euler angles), in radians.
   Vector3 rotation;
+
   /// Object's local scale.
   Vector3 scale;
 
@@ -45,6 +48,7 @@ class Object3D {
 
   /// Local transform.
   Matrix4 matrix;
+
   /// The global transform of the object. If the Object3d has no parent, then it's identical to the local transform.
   Matrix4 matrixWorld;
   Matrix4 matrixRotationWorld;
@@ -52,12 +56,14 @@ class Object3D {
   /// When this is set, it calculates the matrix of position, (rotation or quaternion)
   /// and scale every frame and also recalculates the matrixWorld property.
   bool matrixAutoUpdate = false;
+
   /// When this is set, it calculates the matrixWorld in that frame and resets this property to false.
   bool matrixWorldNeedsUpdate = false;
 
   /// Object's local rotation as Quaternion.
   /// Only used when useQuaternion is set to true.
   Quaternion quaternion;
+
   /// Use quaternion instead of Euler angles for specifying local rotation.
   bool useQuaternion;
 
@@ -65,10 +71,13 @@ class Object3D {
 
   /// Object gets rendered if true.
   bool visible = false;
+
   /// Gets rendered into shadow map.
   bool castShadow = false;
+
   /// Material gets baked in shadow receiving.
   bool receiveShadow = false;
+
   /// When this is set, it checks every frame if the object is in the frustum of the camera.
   /// Otherwise the object gets drawn every frame even if it isn't visible.
   bool frustumCulled = false;
@@ -94,50 +103,39 @@ class Object3D {
   int count;
   bool hasPositions, hasNormals, hasUvs, hasColors;
   var positionArray, normalArray, uvArray, colorArray;
-  gl.Buffer __webglVertexBuffer, __webglNormalBuffer, __webglUVBuffer, __webglColorBuffer;
+  gl.Buffer __webglVertexBuffer,
+      __webglNormalBuffer,
+      __webglUVBuffer,
+      __webglColorBuffer;
 
   var __webglMorphTargetInfluences;
 
   Object3D()
       : id = Object3DCount++,
-
         name = '',
         properties = {},
-
         parent = null,
         children = [],
-
         up = new Vector3(0.0, 1.0, 0.0),
-
         position = new Vector3(0.0, 0.0, 0.0),
         rotation = new Vector3(0.0, 0.0, 0.0),
         eulerOrder = 'XYZ',
         scale = new Vector3(1.0, 1.0, 1.0),
-
         renderDepth = null,
-
         rotationAutoUpdate = true,
-
         matrix = new Matrix4.identity(),
         matrixWorld = new Matrix4.identity(),
         matrixRotationWorld = new Matrix4.identity(),
-
         matrixAutoUpdate = true,
         matrixWorldNeedsUpdate = true,
-
         quaternion = new Quaternion.identity(),
         useQuaternion = false,
-
         boundRadius = 0.0,
         boundRadiusScale = 1.0,
-
         visible = true,
-
         castShadow = false,
         receiveShadow = false,
-
         frustumCulled = true,
-
         _vector = new Vector3.zero();
 
   // TODO - These are not in three.js
@@ -165,17 +163,20 @@ class Object3D {
   void translate(double distance, Vector3 axis) {
     matrix.rotate3(axis);
     axis.normalize();
-    position.add(axis.scale(distance));
+    position.add(axis..scale(distance));
   }
 
   /// Translates object along x axis by distance.
-  void translateX(double distance) => translate(distance, _vector.setValues(1.0, 0.0, 0.0));
+  void translateX(double distance) =>
+      translate(distance, _vector..setValues(1.0, 0.0, 0.0));
 
   /// Translates object along y axis by distance.
-  void translateY(double distance) => translate(distance, _vector.setValues(0.0, 1.0, 0.0));
+  void translateY(double distance) =>
+      translate(distance, _vector..setValues(0.0, 1.0, 0.0));
 
   /// Translates object along z axis by distance.
-  void translateZ(double distance) => translate(distance, _vector.setValues(0.0, 0.0, 1.0));
+  void translateZ(double distance) =>
+      translate(distance, _vector..setValues(0.0, 0.0, 1.0));
 
   /// Rotates object to face point in space.
   void lookAt(Vector3 vector) {
@@ -195,10 +196,10 @@ class Object3D {
   /// Adds object as child of this object.
   void add(Object3D object) {
     if (object == this) {
-      print("THREE.Object3D.add: An object can't be added as a child of itself.");
+      print(
+          "THREE.Object3D.add: An object can't be added as a child of itself.");
       return;
     }
-
 
     if (object.parent != null) {
       object.parent.remove(object);
@@ -215,18 +216,15 @@ class Object3D {
     }
 
     if (scene is Scene) {
-      (scene as Scene).addObject(object);
+      scene.addObject(object);
     }
-
   }
 
   ///  Removes object as child of this object.
   void remove(Object3D object) {
-
     int index = children.indexOf(object);
 
     if (index != -1) {
-
       object.parent = null;
       children.removeAt(index);
 
@@ -238,19 +236,16 @@ class Object3D {
       }
 
       if (obj is Scene) {
-        (obj as Scene).removeObject(object);
+        obj.removeObject(object);
       }
     }
   }
 
   /// Searches through the object's children and returns the first with a matching name, optionally recursive.
   Object3D getChildByName(String name, bool doRecurse) {
-    int c;
-    int cl = children.length;
-    Object3D child, recurseResult;
+    Object3D recurseResult;
 
     for (Object3D child in children) {
-
       if (child.name == name) {
         return child;
       }
@@ -288,7 +283,6 @@ class Object3D {
 
   /// Updates local transform.
   void updateMatrix() {
-
     if (useQuaternion) {
       setRotationFromQuaternion(matrix, quaternion);
     } else {
@@ -307,7 +301,6 @@ class Object3D {
 
   /// Updates global transform of the object and its children.
   void updateMatrixWorld({bool force: false}) {
-
     if (matrixAutoUpdate) updateMatrix();
 
     // update matrixWorld
@@ -325,7 +318,6 @@ class Object3D {
 
     // update children
     children.forEach((c) => c.updateMatrixWorld(force: force));
-
   }
 
   /// Updates the vector from world space to local space.
@@ -338,16 +330,14 @@ class Object3D {
   localToWorld(Vector3 vector) => vector.applyProjection(matrixWorld);
 
   clone() {
-
     // TODO
-
   }
 
-  static Matrix4 ___m1;
-  static Matrix4 get __m1 {
-    if (___m1 == null) {
-      ___m1 = new Matrix4.identity();
-    }
-    return ___m1;
-  }
+  // static Matrix4 ___m1;
+  // static Matrix4 get __m1 {
+  //   if (___m1 == null) {
+  //     ___m1 = new Matrix4.identity();
+  //   }
+  //   return ___m1;
+  // }
 }

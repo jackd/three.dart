@@ -10,9 +10,9 @@ part of three;
  *  curves, but retains the api of a curve
  **************************************************************/
 
-class CurvePath extends Curve {
+class CurvePath<V extends Vector<V>> extends Curve<V> {
 
-  List curves;
+  List<Curve<V>> curves;
   List _bends;
 
   bool autoClose; // Automatically closes the path
@@ -40,8 +40,8 @@ class CurvePath extends Curve {
     var startPoint = curves[0].getPoint(0);
     var endPoint = curves[curves.length - 1].getPoint(1);
 
-    if (!startPoint.equals(endPoint)) {
-      this.curves.add(new LineCurve(endPoint, startPoint));
+    if (startPoint != endPoint) {
+      this.curves.add(new LineCurve<V>(endPoint, startPoint));
     }
 
   }
@@ -54,13 +54,13 @@ class CurvePath extends Curve {
   // 2. Locate and identify type of curve
   // 3. Get t for the curve
   // 4. Return curve.getPointAt(t')
-  getPoint(num t) {
+  V getPoint(num t) {
 
     var d = t * this.length;
     var curveLengths = this.getCurveLengths();
     var i = 0,
         diff;
-    Curve curve;
+    Curve<V> curve;
 
     // To think about boundaries points.
 
@@ -198,18 +198,18 @@ class CurvePath extends Curve {
    **************************************************************/
 
   /// Generate geometry from path points (for Line or ParticleSystem objects)
-  createPointsGeometry({divisions}) {
+  Geometry createPointsGeometry({int divisions}) {
     var pts = this.getPoints(divisions, true);
     return this.createGeometry(pts);
   }
 
   // Generate geometry from equidistance sampling along the path
-  createSpacedPointsGeometry([divisions]) {
-    var pts = this.getSpacedPoints(divisions, true);
-    return this.createGeometry(pts);
+  Geometry createSpacedPointsGeometry([int divisions]) {
+    var pts = getSpacedPoints(divisions, true);
+    return createGeometry(pts);
   }
 
-  createGeometry(points) {
+  Geometry createGeometry(points) {
 
     var geometry = new Geometry();
 
@@ -232,32 +232,28 @@ class CurvePath extends Curve {
 
   getTransformedPoints(segments, {List bends: null}) {
 
-    var oldPts = this.getPoints(segments); // getPoints getSpacedPoints
-    var i, il;
+    var oldPts = getPoints(segments); // getPoints getSpacedPoints
 
     if (bends == null) {
       bends = _bends;
     }
 
-    for (i = 0; i < bends.length; i++) {
+    for (var i = 0; i < bends.length; i++) {
       oldPts = this.getWrapPoints(oldPts, bends[i]);
     }
 
     return oldPts;
-
   }
 
   getTransformedSpacedPoints([num segments, List bends = null]) {
 
     var oldPts = getSpacedPoints(segments);
 
-    var i, il;
-
     if (bends == null) {
       bends = _bends;
     }
 
-    for (i = 0; i < bends.length; i++) {
+    for (var i = 0; i < bends.length; i++) {
       oldPts = this.getWrapPoints(oldPts, bends[i]);
     }
 
@@ -271,7 +267,7 @@ class CurvePath extends Curve {
 
     var bounds = getBoundingBox();
 
-    var i, il, p, oldX, oldY, xNorm;
+    var i, p, oldX, oldY, xNorm;
 
     for (i = 0; i < oldPts.length; i++) {
 

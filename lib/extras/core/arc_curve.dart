@@ -1,13 +1,13 @@
 part of three;
 
-class ArcCurve extends Curve2D {
+class ArcCurve extends Curve<Vector2> {
 
   num aX, aY, aRadius, aStartAngle, aEndAngle;
   bool aClockwise;
 
   ArcCurve(this.aX, this.aY, this.aRadius, this.aStartAngle, this.aEndAngle, this.aClockwise) : super();
 
-  getPoint(t) {
+  Vector2 getPoint(t) {
 
     var deltaAngle = aEndAngle - aStartAngle;
 

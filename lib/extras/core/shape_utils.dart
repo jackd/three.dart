@@ -18,13 +18,11 @@ removeHoles(List<Vector2> contour, List<List<Vector2>> holes) {
   /* For each isolated shape, find the closest points and break to the hole to allow triangulation */
 
 
-  var prevShapeVert, nextShapeVert, prevHoleVert, nextHoleVert;
+  var prevShapeVert, prevHoleVert;
 
   int holeIndex, shapeIndex;
 
-  var shapeId,
-      shapeGroup,
-      h,
+  var h,
       h2,
       hole,
       shortest,
@@ -204,13 +202,10 @@ triangulateShape(contour, holes) {
   //console.log( "allpoints",allpoints, allpoints.length );
 
   var i,
-      il,
       f,
       face,
       key,
-      index,
-      allPointsMap = {},
-      isolatedPointsMap = {};
+      allPointsMap = {};
 
   // prepare all points map
 
@@ -321,4 +316,3 @@ b3p3(t, p) => t * t * t * p;
 
 
 b3(t, p0, p1, p2, p3) => b3p0(t, p0) + b3p1(t, p1) + b3p2(t, p2) + b3p3(t, p3);
-

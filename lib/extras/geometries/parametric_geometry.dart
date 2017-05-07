@@ -16,10 +16,9 @@ class ParametricGeometry extends Geometry {
     var faces = this.faces;
     var uvs = this.faceVertexUvs[0];
 
-    var i, il, j, p;
+    var i, j, p;
     var u, v;
 
-    var stackCount = stacks + 1;
     var sliceCount = slices + 1;
 
     for (i = 0; i <= stacks; i++) {

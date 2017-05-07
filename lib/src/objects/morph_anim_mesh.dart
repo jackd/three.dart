@@ -61,10 +61,9 @@ class MorphAnimMesh extends Mesh {
       // TODO(aforsell) Is this really correct use of RegExp?
       var parts = morph.name.allMatches(pattern.toString()).toList();
 
-      if (parts && parts.length > 1) {
+      if (parts.length > 1) {
 
         var label = parts[1];
-        var num = parts[2];
 
         if (!animations[label]) animations[label] = {
           "start": double.INFINITY,

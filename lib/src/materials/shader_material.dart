@@ -24,7 +24,7 @@ class ShaderMaterial extends Material implements Morphing, Skinning, Wireframe {
   Map defines = {};
 
   ShaderMaterial({ // ShaderMaterial
-  this.attributes, String fragmentShader: "void main() {}", String vertexShader: "void main() {}", Map uniforms,
+  this.attributes, String fragmentShader: "void main() {}", String vertexShader: "void main() {}", Map<String, Uniform> uniforms,
       this.shading: SmoothShading, int vertexColors: NoColors, bool fog: true, this.wireframe: false, this.wireframeLinewidth:
       1, this.skinning: false, this.morphTargets: false, this.morphNormals: false, // Material
   name: '', side: FrontSide, opacity: 1, transparent: false, blending: NormalBlending, blendSrc: SrcAlphaFactor,
@@ -68,4 +68,8 @@ class ShaderMaterial extends Material implements Morphing, Skinning, Wireframe {
     _uniforms = value;
     needsUpdate = true;
   }
+
+  String get vertexShader => _vertexShader;
+  String get fragmentShader => _fragmentShader;
+  Map<String, Uniform> get uniforms => new Map<String, Uniform>.from(_uniforms);
 }

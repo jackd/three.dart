@@ -15,7 +15,7 @@ class CSS3DObject extends Object3D {
   }
 }
 
-class CSS3DRenderer implements Renderer {
+class CSS3DRenderer implements Renderer<PerspectiveCamera> {
   Projector _projector;
   Element domElement;
   Element cameraElement;
@@ -76,7 +76,7 @@ class CSS3DRenderer implements Renderer {
 
   }
 
-  render(Scene scene, camera) {
+  render(Scene scene, PerspectiveCamera camera) {
 
     var fov = 0.5 / Math.tan(camera.fov * Math.PI / 360) * _height;
 

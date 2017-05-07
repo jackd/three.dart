@@ -25,7 +25,7 @@ class Path extends CurvePath {
 
   var useSpacedPoints = false;
 
-  List _points;
+  // List _points;
   List<PathAction> actions;
 
   Path([List points])
@@ -171,7 +171,7 @@ class Path extends CurvePath {
 
   }
 
-  getSpacedPoints([int divisions = 5, bool closedPath = false]) {
+  List<Vector2> getSpacedPoints([int divisions = 5, bool closedPath = false]) {
 
     if (divisions == null) divisions = 40;
 
@@ -192,11 +192,10 @@ class Path extends CurvePath {
     // }
 
     return points;
-
   }
 
   /* Return an array of vectors based on contour of the path */
-  getPoints([int divisions = null, closedPath = false]) {
+  List<Vector2> getPoints([int divisions = null, closedPath = false]) {
 
     if (useSpacedPoints) {
       return getSpacedPoints(divisions, closedPath);
@@ -206,7 +205,7 @@ class Path extends CurvePath {
 
     List<Vector2> points = [];
 
-    var i, il, item, action, args;
+    var i, item, action, args;
     var cpx, cpy, cpx2, cpy2, cpx1, cpy1, cpx0, cpy0, laste, j, t, tx, ty;
 
     for (i = 0; i < actions.length; i++) {
@@ -434,7 +433,7 @@ class Path extends CurvePath {
   // This was used for testing purposes. Should be removed soon.
   transform(path, segments) {
 
-    var bounds = getBoundingBox();
+    // var bounds = getBoundingBox();
     var oldPts = getPoints(segments); // getPoints getSpacedPoints
 
     //console.log( path.cacheArcLengths() );
@@ -448,7 +447,7 @@ class Path extends CurvePath {
   // Breaks path into shapes
   List<Shape> toShapes() {
 
-    var i, il, item, action, args;
+    var i, item, action, args;
 
     List<Path> subPaths = [];
     var lastPath = new Path();

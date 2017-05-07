@@ -23,7 +23,7 @@ library FontUtils;
 
 import 'package:vector_math/vector_math.dart';
 import "package:three/three.dart";
-import "core/shape_utils.dart" as ShapeUtils;
+// import "core/shape_utils.dart" as ShapeUtils;
 
 var _face = "helvetiker",
     _weight = "normal",
@@ -34,7 +34,7 @@ var _face = "helvetiker",
 /// Map of [FontFace] of Map<String, Map> (before parsing)
 Map<String, Map<String, Map<String, dynamic>>> _faces = {};
 
-Map<String, Map> getFace() => _faces[_face][_weight][_style];
+Map<String, dynamic> getFace() => _faces[_face][_weight][_style];
 
 Map<String, String> loadFace(Map<String, String> data) {
 
@@ -46,7 +46,7 @@ Map<String, String> loadFace(Map<String, String> data) {
   _faces[family][data["cssFontWeight"]][data["cssFontStyle"]] = data;
 
   // TODO - Parse data
-  var face = _faces[family][data["cssFontWeight"]][data["cssFontStyle"]] = data;
+  _faces[family][data["cssFontWeight"]][data["cssFontStyle"]] = data;
 
   return data;
 
@@ -54,26 +54,20 @@ Map<String, String> loadFace(Map<String, String> data) {
 
 Map drawText(String text) {
 
-  var characterPts = [],
-      allPts = [];
-
   // RenderText
 
-  var i,
-      p,
-      face = getFace(),
+  var face = getFace(),
       scale = _size / face["resolution"],
       offset = 0,
-      chars = text.split(''),
-      length = chars.length;
+      chars = text.split('');
 
   var fontPaths = [];
 
-  for (i = 0; i < length; i++) {
+  for (var c in chars) {
 
     var path = new Path();
 
-    var ret = extractGlyphPoints(chars[i], face, scale, offset, path);
+    var ret = extractGlyphPoints(c, face, scale, offset, path);
     offset += ret["offset"];
 
     fontPaths.add(ret["path"]);
@@ -105,10 +99,10 @@ Map drawText(String text) {
 
 Map extractGlyphPoints(String c, Map face, num scale, num offset, path) {
 
-  List<Vector2> pts = [];
+  // List<Vector2> pts = [];
 
-  var i, i2, divisions, outline, action, length, scaleX, scaleY, x, y, cpx, cpy, cpx0, cpy0, cpx1, cpy1, cpx2, cpy2,
-      laste;
+  var i, outline, action, length, scaleX, scaleY, x, y, cpx, cpy,
+    cpx1, cpy1, cpx2, cpy2;
 
   var glyph = face["glyphs"][c];
   if (glyph == null) glyph = face["glyphs"]['?'];
@@ -165,21 +159,21 @@ Map extractGlyphPoints(String c, Map face, num scale, num offset, path) {
 
           path.quadraticCurveTo(cpx1, cpy1, cpx, cpy);
 
-          if (pts.length > 0) laste = pts[pts.length - 1];
+          // if (pts.length > 0) laste = pts[pts.length - 1];
 
-          if (laste != null) {
+          // if (laste != null) {
 
-            cpx0 = laste.x;
-            cpy0 = laste.y;
+            // cpx0 = laste.x;
+            // cpy0 = laste.y;
 
-            for (i2 = 1; i2 <= divisions; i2++) {
+            // for (i2 = 1; i2 <= divisions; i2++) {
 
-              var t = i2 / divisions;
-              var tx = ShapeUtils.b2(t, cpx0, cpx1, cpx);
-              var ty = ShapeUtils.b2(t, cpy0, cpy1, cpy);
-            }
+              // var t = i2 / divisions;
+              // var tx = ShapeUtils.b2(t, cpx0, cpx1, cpx);
+              // var ty = ShapeUtils.b2(t, cpy0, cpy1, cpy);
+            // }
 
-          }
+          // }
 
           break;
 
@@ -196,22 +190,22 @@ Map extractGlyphPoints(String c, Map face, num scale, num offset, path) {
 
           path.bezierCurveTo(cpx, cpy, cpx1, cpy1, cpx2, cpy2);
 
-          if (pts.length > 0) laste = pts[pts.length - 1];
+          // if (pts.length > 0) laste = pts[pts.length - 1];
 
-          if (laste != null) {
+          // if (laste != null) {
 
-            cpx0 = laste.x;
-            cpy0 = laste.y;
+            // cpx0 = laste.x;
+            // cpy0 = laste.y;
 
-            for (i2 = 1; i2 <= divisions; i2++) {
+            // for (i2 = 1; i2 <= divisions; i2++) {
 
-              var t = i2 / divisions;
-              var tx = ShapeUtils.b3(t, cpx0, cpx1, cpx2, cpx);
-              var ty = ShapeUtils.b3(t, cpy0, cpy1, cpy2, cpy);
+              // var t = i2 / divisions;
+              // var tx = ShapeUtils.b3(t, cpx0, cpx1, cpx2, cpx);
+              // var ty = ShapeUtils.b3(t, cpy0, cpy1, cpy2, cpy);
 
-            }
+            // }
 
-          }
+          // }
 
           break;
 
@@ -256,8 +250,6 @@ List<Shape> generateShapes(String text, [int size = 100, int curveSegments = 4, 
 
 class Glyph {
   String o;
-  /// outline
-  List _cachedOutline;
 
   num ha;
 }

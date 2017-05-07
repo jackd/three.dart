@@ -38,8 +38,8 @@ class MeshPhongMaterial extends Material implements Lighting, TextureMapping, En
 
   var envMap;
   int combine;
-  num reflectivity;
-  num refractionRatio;
+  double reflectivity;
+  double refractionRatio;
 
   /// How the triangles of a curved surface are rendered: as a smooth surface,
   /// as flat separate facets, or no shading at all.
@@ -87,7 +87,7 @@ class MeshPhongMaterial extends Material implements Lighting, TextureMapping, En
   num ambient: 0xffffff, num emissive: 0x000000, num specular: 0x111111, this.map, this.shininess: 30, this.metal:
       false, this.perPixel: false, this.wrapAround: false, Vector3 wrapRGB, this.lightMap, this.specularMap, this.envMap,
       this.bumpMap, this.bumpScale: 1, this.normalMap: null, this.normalScale, this.combine: MultiplyOperation,
-      this.reflectivity: 1, this.refractionRatio: 0.98, this.shading: SmoothShading, int vertexColors: NoColors, bool fog:
+      this.reflectivity: 1.0, this.refractionRatio: 0.98, this.shading: SmoothShading, int vertexColors: NoColors, bool fog:
       true, this.wireframe: false, this.wireframeLinewidth: 1, this.wireframeLinecap: 'round', this.wireframeLinejoin:
       'round', this.skinning: false, this.morphTargets: false, this.morphNormals: false, // Material
   name: '', side: FrontSide, opacity: 1, transparent: false, blending: NormalBlending, blendSrc: SrcAlphaFactor,

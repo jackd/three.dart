@@ -44,8 +44,8 @@ class MeshBasicMaterial extends Material implements TextureMapping, EnvironmentM
   Texture specularMap;
   var envMap; // TextureCube?
   var combine; // Multiply?
-  num reflectivity;
-  num refractionRatio;
+  double reflectivity;
+  double refractionRatio;
 
   int shading;
   /// Render geometry as wireframe. Default is false (i.e. render as flat polygons).
@@ -85,7 +85,7 @@ class MeshBasicMaterial extends Material implements TextureMapping, EnvironmentM
 
   this.map, num color: 0xffffff, //emissive
 
-  this.lightMap, this.specularMap, this.envMap, this.combine: MultiplyOperation, this.reflectivity: 1,
+  this.lightMap, this.specularMap, this.envMap, this.combine: MultiplyOperation, this.reflectivity: 1.0,
       this.refractionRatio: 0.98, this.shading: SmoothShading, int vertexColors: NoColors, bool fog: true, this.wireframe:
       false, this.wireframeLinewidth: 1, this.wireframeLinecap: 'round', this.wireframeLinejoin: 'round', this.skinning:
       false, this.morphTargets: false, // Material

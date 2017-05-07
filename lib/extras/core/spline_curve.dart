@@ -1,13 +1,13 @@
 part of three;
 
-class SplineCurve extends Curve2D {
+class SplineCurve extends Curve<Vector2> {
   List<Vector2> points;
 
   SplineCurve([this.points = null]) {
     if (points == null) points = [];
   }
 
-  getPoint(t) {
+  Vector2 getPoint(t) {
 
     var v = new Vector2.zero();
     var c = new List(4);

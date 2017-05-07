@@ -3,7 +3,7 @@ part of three;
 /**************************************************************
  *  Spline 3D curve
  **************************************************************/
-class SplineCurve3 extends Curve3D {
+class SplineCurve3 extends Curve<Vector3> {
 
   List<Vector3> points;
 

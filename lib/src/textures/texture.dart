@@ -55,7 +55,7 @@ class Texture {
   List mipmaps = [];
 
   // WebGL
-  var __webglTexture;
+  gl.Texture __webglTexture;
 
   //TODO: resolve dynamic vars, find out what UVMapping is!
   Texture([this.image, this.mapping = null, this.wrapS = ClampToEdgeWrapping, this.wrapT = ClampToEdgeWrapping,

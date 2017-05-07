@@ -23,7 +23,7 @@ part of three_shaders;
 // -- Rendering Shader
 // [7] ocean_main               -> Vertex and Fragment shader used to create the final render
 
-var OceanShaders = new Map()
+var oceanShaders = new Map<String, dynamic>()
     ..['ocean_sim_vertex'] = {
       'varying': {
         "vUV": {

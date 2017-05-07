@@ -61,20 +61,20 @@ class Projector {
         _clippedVertex1PositionScreen = new Vector4(0.0, 0.0, 0.0, 1.0),
         _clippedVertex2PositionScreen = new Vector4(0.0, 0.0, 0.0, 1.0);
 
-  Vector3 projectVector(Vector3 vector, Camera camera) {
+  void projectVector(Vector3 vector, Camera camera) {
     camera.matrixWorldInverse.copyInverse(camera.matrixWorld);
 
     _viewProjectionMatrix = camera.projectionMatrix * camera.matrixWorldInverse;
 
-    return vector.applyProjection(_viewProjectionMatrix);
+    vector.applyProjection(_viewProjectionMatrix);
   }
 
-  Vector3 unprojectVector(Vector3 vector, Camera camera) {
+  void unprojectVector(Vector3 vector, Camera camera) {
     camera.projectionMatrixInverse.copyInverse(camera.projectionMatrix);
 
     _viewProjectionMatrix = camera.matrixWorld * camera.projectionMatrixInverse;
 
-    return vector.applyProjection(_viewProjectionMatrix);
+    vector.applyProjection(_viewProjectionMatrix);
   }
 
   /**
@@ -84,7 +84,7 @@ class Projector {
    * @camera - THREE.Camera
    */
   Ray pickingRay(Vector3 vector, Camera camera) {
-    Vector3 end, ray, t;
+    Vector3 end;
 
     // set two vectors with opposing z values
     vector.z = -1.0;
@@ -94,7 +94,7 @@ class Projector {
     unprojectVector(end, camera);
 
     // find direction from vector to end
-    end.sub(vector).normalize();
+    end..sub(vector)..normalize();
 
     return new Ray(vector, end);
   }
@@ -204,20 +204,19 @@ class Projector {
     num near = camera.near,
         far = camera.far;
     bool visible = false;
-    int o, ol, v, vl, f, fl, n, nl, c, cl, u, ul;
+    int v, vl, f, fl, n, nl, c, cl, u, ul;
     Object3D object;
     Matrix4 modelMatrix, rotationMatrix;
     Geometry geometry;
     List geometryMaterials;
     List<Vector3> vertices;
-    Vector3 vertex;
-    Vector3 vertexPositionScreen, normal;
+    Vector3 normal;
     List<Face> faces;
     Face face;
     RenderableFace _face;
     List faceVertexNormals;
     List<List> faceVertexUvs;
-    RenderableVertex v1, v2, v3, v4;
+    RenderableVertex v1, v2;
     bool isFaceMaterial;
     Material material;
     int side;
@@ -622,9 +621,3 @@ class ProjectorRenderData {
         lights = [],
         elements = [];
 }
-
-
-
-
-
-

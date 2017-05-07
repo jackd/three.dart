@@ -49,24 +49,24 @@ class Loader {
     return e;
   }
 
-  _updateProgress(progress) {
-
-    var message = "Loaded ";
-
-    if (progress.total) {
-
-      message = "$message${ ( 100 * progress.loaded / progress.total ).toStringAsFixed(0)}%";
-
-
-    } else {
-
-      message = "$message${ ( progress.loaded / 1000 ).toFixed(2)} KB";
-
-    }
-
-    statusDomElement.innerHtml = message;
-
-  }
+  // _updateProgress(progress) {
+  //
+  //   var message = "Loaded ";
+  //
+  //   if (progress.total) {
+  //
+  //     message = "$message${ ( 100 * progress.loaded / progress.total ).toStringAsFixed(0)}%";
+  //
+  //
+  //   } else {
+  //
+  //     message = "$message${ ( progress.loaded / 1000 ).toFixed(2)} KB";
+  //
+  //   }
+  //
+  //   statusDomElement.innerHtml = message;
+  //
+  // }
 
   static _extractUrlBase(url) {
     var parts = url.split('/');
@@ -233,7 +233,7 @@ class Loader {
         depthTest = true,
         depthWrite = true,
         visible = true,
-        side = FrontSide,
+        // side = FrontSide,
         specular = 0x111111,
         ambient = 0xffffff,
         shininess = null,
@@ -286,13 +286,13 @@ class Loader {
       visible = m["visible"];
     }
 
-    if (m.containsKey("flipSided")) {
-      side = BackSide;
-    }
-
-    if (m.containsKey("doubleSided")) {
-      side = DoubleSide;
-    }
+    // if (m.containsKey("flipSided")) {
+    //   side = BackSide;
+    // }
+    //
+    // if (m.containsKey("doubleSided")) {
+    //   side = DoubleSide;
+    // }
 
     if (m.containsKey("wireframe")) {
       wireframe = m["wireframe"];
@@ -394,7 +394,7 @@ class Loader {
 
     if (m.containsKey("mapNormal")) {
 
-      var shader = ShaderUtils.lib["normal"];
+      ShaderMaterial shader = ShaderUtils.lib["normal"];
       var uniforms = UniformsUtils.clone(shader.uniforms);
 
       uniforms["tNormal"].value = normalMap;
@@ -510,4 +510,3 @@ class Loader {
     return material;
   }
 }
-

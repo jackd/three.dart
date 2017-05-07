@@ -2,28 +2,49 @@
 // TODO - dispatch events
 part of three;
 
-class GeometryAttribute<T> {
+class GeometryAttribute<T extends List> {
   static final String POSITION = "position";
   static final String NORMAL = "normal";
   static final String INDEX = "index";
   static final String UV = "uv";
   static final String TANGENT = "tangent";
   static final String COLOR = "color";
-  int numItems, itemSize;
+  int itemSize;
+  int numItems;
+  // int get numItems => array.length;
   T array;
 
   // Used in WebGL Renderer
   Buffer buffer;
 
-  GeometryAttribute._internal(this.numItems, this.itemSize, this.array);
+  GeometryAttribute._internal(this.array, [this.itemSize=1]) {
+    numItems = array.length;
+  }
 
-  factory GeometryAttribute.float32(int numItems, [int itemSize = 1]) =>
-      new GeometryAttribute._internal(numItems, itemSize, new Float32List(numItems));
+  // GeometryAttribute._internal(this.numItems, this.itemSize, this.array);
 
-  factory GeometryAttribute.int16(int numItems, [int itemSize = 1]) =>
-      new GeometryAttribute._internal(numItems, itemSize, new Int16List(numItems));
+  // factory GeometryAttribute.float32(int numItems, [int itemSize = 1]) =>
+  //     new GeometryAttribute._internal(numItems, itemSize, new Float32List(numItems));
+  //
+  // factory GeometryAttribute.int16(int numItems, [int itemSize = 1]) =>
+  //     new GeometryAttribute._internal(numItems, itemSize, new Int16List(numItems));
 
 }
+
+GeometryAttribute<Float32List> float32GeometryAttribute(int numItems, [int itemSize=1])
+  => new GeometryAttribute<Float32List>._internal(new Float32List(numItems), itemSize);
+
+GeometryAttribute<Int16List> int16GeometryAttribute(int numItems, [int itemSize=1])
+  => new GeometryAttribute<Int16List>._internal(new Int16List(numItems), itemSize);
+
+// class GeometryAttributeFloat32 extends GeometryAttribute<Float32List> {
+//   GeometryAttributeFloat32(int numItems, [int itemSize=1]): super._internal(new Float32List(numItems), itemSize);
+// }
+//
+// class GeometryAttributeInt16 extends GeometryAttribute<Int16List> {
+//   GeometryAttributeInt16(int numItems, [int itemSize=1]): super._internal(new Int16List(numItems), itemSize);
+// }
+
 
 class Chunk {
   int start, count, index;
@@ -62,7 +83,7 @@ class BufferGeometry implements Geometry {
   bool hasTangents;
 
   // for compatibility
-  List morphTargets = [];
+  List<MorphTarget> morphTargets = [];
   List morphNormals = [];
 
   // WebGL
@@ -118,7 +139,7 @@ class BufferGeometry implements Geometry {
 
     var positions = aPosition.array;
 
-    if (positions) {
+    if (positions.length > 0) {
 
       var bb = boundingBox;
       var x, y, z;
@@ -220,7 +241,7 @@ class BufferGeometry implements Geometry {
 
       if (aNormal == null) {
 
-        attributes[GeometryAttribute.NORMAL] = new GeometryAttribute.float32(aPosition.numItems, 3);
+        attributes[GeometryAttribute.NORMAL] = float32GeometryAttribute(aPosition.numItems, 3);
 
       } else {
 
@@ -348,7 +369,7 @@ class BufferGeometry implements Geometry {
 
     if (aTangent == null) {
 
-      attributes["tangent"] = new GeometryAttribute.float32(nVertices, 4);
+      attributes["tangent"] = float32GeometryAttribute(nVertices, 4);
 
     }
 
@@ -452,7 +473,6 @@ class BufferGeometry implements Geometry {
     var n = new Vector3.zero(),
         n2 = new Vector3.zero();
     var w, t, test;
-    var nx, ny, nz;
 
     var handleVertex = (v) {
 
@@ -467,7 +487,9 @@ class BufferGeometry implements Geometry {
       // Gram-Schmidt orthogonalize
 
       tmp.setFrom(t);
-      tmp.sub(n.scale(n.dot(t))).normalize();
+      tmp
+        ..sub(n..scale(n.dot(t)))
+        ..normalize();
 
       // Calculate handedness
 

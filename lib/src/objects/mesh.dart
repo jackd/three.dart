@@ -19,8 +19,8 @@ class Mesh extends Object3D {
 
   num morphTargetBase = 0;
   List morphTargetForcedOrder;
-  List morphTargetInfluences;
-  Map _morphTargetDictionary;
+  List<num> morphTargetInfluences;
+  Map<String, int> _morphTargetDictionary;
 
   Mesh(Geometry geometry, [this.material]) : super() {
 

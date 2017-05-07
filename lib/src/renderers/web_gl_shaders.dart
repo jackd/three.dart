@@ -1835,10 +1835,7 @@ class Attribute<T> {
     else if( type == "v3" ) { size = 3; }
     else if( type == "v4" ) { size = 4; }
     else if( type == "c"  ) { size = 3; }
-
-    if (value == null) {
-      value = [];
-    }
+    value = value ?? [];
   }
 
   Attribute clone() {
@@ -1846,19 +1843,29 @@ class Attribute<T> {
     return a;
   }
 
-  // <Color>
-  factory Attribute.color([List<num> hex]) => new Attribute("c", (hex != null) ? hex.map((h) => new Color(h)) : null);
-  // <double>
-  factory Attribute.float([List<double> v]) => new Attribute("f", v);
-  // <int>
-  factory Attribute.int([List<int> v]) => new Attribute("i", v);
-  // <Vector2>
-  factory Attribute.vector2([List<Vector2> v]) => new Attribute("v2", v);
-  // <Vector3>
-  factory Attribute.vector3([List<Vector3> v]) => new Attribute("v3", v);
-  // <Vector4>
-  factory Attribute.vector4([List<Vector4> v]) => new Attribute("v4", v);
+  // // <Color>
+  // factory Attribute.color([List<num> hex]) => new Attribute("c", (hex?.map<Color>((h) => new Color(h)).toList());
+  // // <double>
+  // factory Attribute.float([List<double> v]) => new Attribute("f", v);
+  // // <int>
+  // factory Attribute.int([List<int> v]) => new Attribute("i", v);
+  // // <Vector2>
+  // factory Attribute.vector2([List<Vector2> v]) => new Attribute("v2", v);
+  // // <Vector3>
+  // factory Attribute.vector3([List<Vector3> v]) => new Attribute("v3", v);
+  // // <Vector4>
+  // factory Attribute.vector4([List<Vector4> v]) => new Attribute("v4", v);
 }
+
+Attribute<Color> colorAttribute([List<num> hex]) =>
+  new Attribute<Color>("c", hex?.map((h) => new Color(h))?.toList());
+  // new Attribute<Color>("c", (hex != null) ? hex.map((h) => new Color(h)) : null);
+
+Attribute<double> floatAttribute([List<double> v]) => new Attribute("f", v);
+Attribute<int> intAttribute([List<int> v]) => new Attribute("i", v);
+Attribute<Vector2> vector2Attribute([List<Vector2> v]) => new Attribute("v2", v);
+Attribute<Vector3> vector3Attribute([List<Vector3> v]) => new Attribute("v3", v);
+Attribute<Vector4> vector4Attribute([List<Vector4> v]) => new Attribute("v4", v);
 
 class Uniform<T> {
   String type;
@@ -1866,7 +1873,7 @@ class Uniform<T> {
 
   // cache the typed value
   bool _dirty = true;
-  var _array;
+  List<num> _array;
 
   Uniform(this.type, value) {
     this.value = value;
@@ -2044,6 +2051,17 @@ class Uniform<T> {
   // <List<Matrix4>>
   factory Uniform.matrix4v(List<Matrix4> m) => new Uniform("m4v", m);
 }
+
+// Uniform<Color> colorUniform(num hex) => new Uniform<Color>("c", new Color(hex));
+// Uniform<double> floatUniform(double v) => new Uniform<double>("f", v);
+// Uniform<List<double>> floatVUniform(List<double> v) => new Uniform<List<double>>("fv", v);
+// Uniform<List<double>> floatV1Uniform(List<double> v) => new Uniform<List<double>>("fv1", v);
+// Uniform<int> intUniform(int v) => new Uniform<int>("i", v);
+// Uniform<List<int>> intVUniform(List<int> v) => new Uniform<List<int>>("iv", v);
+// Uniform<List<int>> intV1Uniform(List<int> v) => new Uniform<List<int>>("iv1", v);
+// Uniform<Texture> textureUniform(Texture texture) => new Uniform("t", texture);
+// Uniform<Texture> texturevUniform(Texture texture) => new Uniform("tv", texture);
+
 
 var __UniformsLib;
 

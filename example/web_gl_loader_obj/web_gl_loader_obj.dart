@@ -5,10 +5,10 @@ var container, stats;
 
 var camera, cameraTarget, scene, renderer;
 
-var mouseX = 0,
-    mouseY = 0;
-var windowHalfX = window.innerWidth / 2;
-var windowHalfY = window.innerHeight / 2;
+var mouseX = 0.0,
+    mouseY = 0.0;
+double windowHalfX = window.innerWidth / 2;
+double windowHalfY = window.innerHeight / 2;
 
 main() {
   init();

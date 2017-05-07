@@ -80,7 +80,6 @@ class Color {
 
   /// Copies the given color making conversions from linear to gamma space.
   Color copyLinearToGamma(Color color) {
-    num x = Math.sqrt(color.r);
 
     r = Math.sqrt(color.r);
     g = Math.sqrt(color.g);

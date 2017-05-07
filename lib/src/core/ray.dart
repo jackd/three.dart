@@ -70,7 +70,6 @@ class Ray {
 
     Intersect intersect;
     List intersects = [];
-    int l = object.children.length;
 
     if (recursive) {
       object.children.forEach((child) {
@@ -94,7 +93,7 @@ class Ray {
       Mesh mesh = object;
       // Checking boundingSphere
       num distance = _distanceFromIntersection(origin, direction, object.matrixWorld.getTranslation());
-      Vector3 scale = Frustum.__v1.setValues(
+      Vector3 scale = Frustum.__v1..setValues(
           object.matrixWorld.getColumn(0).length,
           object.matrixWorld.getColumn(1).length,
           object.matrixWorld.getColumn(2).length);
@@ -104,8 +103,6 @@ class Ray {
       }
 
       // Checking faces
-
-      int f;
 
       Face face;
       num dot, scalar;
@@ -141,7 +138,7 @@ class Ray {
         // note: this works regardless of the direction of the face normal
 
         vector.setFrom(face.centroid);
-        vector.applyProjection(objMatrix).sub(originCopy);
+        vector..applyProjection(objMatrix)..sub(originCopy);
         normal.setFrom(face.normal);
         normal.applyProjection(object.matrixRotationWorld);
         dot = directionCopy.dot(normal);
@@ -159,9 +156,9 @@ class Ray {
 
         if (side == DoubleSide || (side == FrontSide ? dot < 0 : dot > 0)) {
 
-          intersectPoint = originCopy + directionCopy.scale(scalar);
+          intersectPoint = originCopy + (directionCopy..scale(scalar));
 
-          abcd = face.indices.map((idx) => vertices[idx].clone().applyProjection(objMatrix)).toList();
+          abcd = face.indices.map((idx) => vertices[idx].clone()..applyProjection(objMatrix)).toList();
 
           var pointInFace;
 
@@ -194,13 +191,9 @@ class Ray {
   }
 
   List<Intersect> intersectObjects(List<Object3D> objects) {
-    int l = objects.length;
     List<Intersect> intersects = [];
-
     objects.forEach((o) => intersects.addAll(intersectObject(o)));
-
     intersects.sort((a, b) => a.distance.compareTo(b.distance));
-
     return intersects;
   }
 

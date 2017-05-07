@@ -91,7 +91,7 @@ class TorusKnotGeometry extends Geometry {
   Vector3 getPos(double u, double v, double in_q, double in_p, double radius, double heightScale) {
 
     var cu = Math.cos(u);
-    var cv = Math.cos(v);
+    // var cv = Math.cos(v);
     var su = Math.sin(u);
     var quOverP = in_q / in_p * u;
     var cs = Math.cos(quOverP);

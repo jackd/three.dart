@@ -105,7 +105,7 @@ void onDocumentMouseDown(event) {
       new Vector3((event.client.x / window.innerWidth) * 2 - 1, -(event.client.y / window.innerHeight) * 2 + 1, 0.5);
   projector.unprojectVector(vector, camera);
 
-  Ray ray = new Ray(camera.position, vector.sub(camera.position).normalize());
+  Ray ray = new Ray(camera.position, vector..sub(camera.position)..normalize());
 
   List<Intersect> intersects = ray.intersectObjects(objects);
 

@@ -8,6 +8,7 @@ library three_postprocessing;
  */
 
 import 'dart:html';
+import 'dart:web_gl' as gl;
 import 'package:three/three.dart';
 import 'package:three/extras/shaders/shaders.dart';
 

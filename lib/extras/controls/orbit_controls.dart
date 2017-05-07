@@ -9,18 +9,18 @@
  * @author Adam Joseph Cook / https://github.com/adamjcook
  *
  * @overview
- * [OrbitControls] is a set of controls performs orbiting, dollying (zooming) 
+ * [OrbitControls] is a set of controls performs orbiting, dollying (zooming)
  * and panning. It maintains the "up" direction as +Y, unlike [TrackballControls].
  * Touch events on tablet and phone form-factors are also supported.
- * 
+ *
  * * Orbit - left mouse / touch: one finger move
  * * Zoom  - middle mouse, or mousewheel / touch: two finger spread or squish
  * * Pan   - right mouse, or arrow keys / touch: three finger swipe
- * 
+ *
  * [OrbitControls] is a drop-in replacement for most of the examples which use
  * [TrackballControls].
- * 
- * Only [PerspectiveCamera] and [OrthographicCamera] are supported with this 
+ *
+ * Only [PerspectiveCamera] and [OrthographicCamera] are supported with this
  * control.
  **/
 library OrbitControls;
@@ -178,7 +178,8 @@ class OrbitControls extends EventEmitter {
 
     // Establish that camera.up is the orbit axis.
     quaternion = setFromUnitVectors(object.up, new Vector3(0.0, 1.0, 0.0));
-    quaternionInverse = quaternion.clone().inverse();
+    quaternionInverse = quaternion.clone()
+      ..inverse();
 
     changeEvent = new EventEmitterEvent(type: 'change');
     startEvent = new EventEmitterEvent(type: 'start');
@@ -253,7 +254,8 @@ class OrbitControls extends EventEmitter {
 
       // For [PerspectiveCamera]
       var position = object.position;
-      var offset = position.clone().sub(target);
+      var offset = position.clone()
+        ..sub(target);
       var targetDistance = offset.length;
 
       // Half of the FOV is the distance from the center to the top of the screen.
@@ -306,7 +308,9 @@ class OrbitControls extends EventEmitter {
 
     var position = object.position;
 
-    _offset.setFrom(position).sub(target);
+    _offset
+      ..setFrom(position)
+      ..sub(target);
 
     // Rotate offset to 'Y-axis is up' space.
     quaternion.rotate(_offset);
@@ -348,7 +352,9 @@ class OrbitControls extends EventEmitter {
     // Rotate offset back to 'camera-up-vector-is-up' space
     quaternionInverse.rotate(_offset);
 
-    position.setFrom(target).add(_offset);
+    position
+      ..setFrom(target)
+      ..add(_offset);
 
     object.lookAt(target);
 
@@ -515,10 +521,10 @@ class OrbitControls extends EventEmitter {
 
     var delta = 0;
 
-    if (event.wheelDeltaY != 0) {
+    if (event.deltaY != 0) {
 
       // WebKit / Opera / Internet Explorer 9
-      delta = event.wheelDeltaY;
+      delta = event.deltaY;
 
     } else if (event.detail != 0) {
 
@@ -683,7 +689,7 @@ class OrbitControls extends EventEmitter {
       case 3:
         // Three-finger touch - pan
         if (noPan == true) return;
-        if (_state = STATE.TOUCH_PAN) return;
+        if (_state == STATE.TOUCH_PAN) return;
 
         _panEnd = new Vector2(event.touches[0].pageX.toDouble(), event.touches[0].pageY.toDouble());
 
@@ -742,7 +748,8 @@ class OrbitControls extends EventEmitter {
       v1 = from.cross(to);
     }
 
-    return new Quaternion(v1.x, v1.y, v1.z, r).normalize();
+    return new Quaternion(v1.x, v1.y, v1.z, r)
+      ..normalize();
 
   }
 

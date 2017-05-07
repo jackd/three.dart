@@ -50,11 +50,11 @@ Texture loadCompressedTexture(String url, {mapping, Function onLoad(Texture text
     var buffer = request.response;
     var dds = parseDDS(buffer, true);
 
-    texture.format = dds["format"];
+    texture.format = dds.format;
 
-    texture.mipmaps = dds["mipmaps"];
-    texture.image.width = dds["width"];
-    texture.image.height = dds["height"];
+    texture.mipmaps = dds.mipmaps;
+    texture.image.width = dds.width;
+    texture.image.height = dds.height;
 
     // gl.generateMipmap fails for compressed textures
     // mipmaps must be embedded in the DDS file
@@ -116,15 +116,25 @@ Texture loadTextureCube(List<String> array, [mapping, Function onLoad()]) {
 
 }
 
-Map parseDDS(ByteBuffer buffer, bool loadMipmaps) {
+class Dds {
+  List mipmaps = [];
+  int width = 0;
+  int height = 0;
+  int format = null;
+  int mipmapCount = 1;
 
-  var dds = {
-    "mipmaps": [],
-    "width": 0,
-    "height": 0,
-    "format": null,
-    "mipmapCount": 1
-  };
+}
+
+Dds parseDDS(ByteBuffer buffer, bool loadMipmaps) {
+
+  // var dds = {
+  //   "mipmaps": [],
+  //   "width": 0,
+  //   "height": 0,
+  //   "format": null,
+  //   "mipmapCount": 1
+  // };
+  var dds = new Dds();
 
   // Adapted from @toji's DDS utils
   //  https://github.com/toji/webgl-texture-utils/blob/master/texture-util/dds.js
@@ -132,36 +142,38 @@ Map parseDDS(ByteBuffer buffer, bool loadMipmaps) {
   // All values and structures referenced from:
   // http://msdn.microsoft.com/en-us/library/bb943991.aspx/
 
-  var DDS_MAGIC = 0x20534444;
+  const DDS_MAGIC = 0x20534444;
 
-  var DDSD_CAPS = 0x1,
-      DDSD_HEIGHT = 0x2,
-      DDSD_WIDTH = 0x4,
-      DDSD_PITCH = 0x8,
-      DDSD_PIXELFORMAT = 0x1000,
-      DDSD_MIPMAPCOUNT = 0x20000,
-      DDSD_LINEARSIZE = 0x80000,
-      DDSD_DEPTH = 0x800000;
+  // const DDSD_CAPS = 0x1,
+  //     DDSD_HEIGHT = 0x2,
+  //     DDSD_WIDTH = 0x4,
+  //     DDSD_PITCH = 0x8,
+  //     DDSD_PIXELFORMAT = 0x1000,
+  const DDSD_MIPMAPCOUNT = 0x20000;
+  //     DDSD_LINEARSIZE = 0x80000,
+  //     DDSD_DEPTH = 0x800000;
+  //
+  // const DDSCAPS_COMPLEX = 0x8,
+  //     DDSCAPS_MIPMAP = 0x400000,
+  //     DDSCAPS_TEXTURE = 0x1000;
+  //
+  // const DDSCAPS2_CUBEMAP = 0x200,
+  //     DDSCAPS2_CUBEMAP_POSITIVEX = 0x400,
+  //     DDSCAPS2_CUBEMAP_NEGATIVEX = 0x800,
+  //     DDSCAPS2_CUBEMAP_POSITIVEY = 0x1000,
+  //     DDSCAPS2_CUBEMAP_NEGATIVEY = 0x2000,
+  //     DDSCAPS2_CUBEMAP_POSITIVEZ = 0x4000,
+  //     DDSCAPS2_CUBEMAP_NEGATIVEZ = 0x8000,
+  //     DDSCAPS2_VOLUME = 0x200000;
 
-  var DDSCAPS_COMPLEX = 0x8,
-      DDSCAPS_MIPMAP = 0x400000,
-      DDSCAPS_TEXTURE = 0x1000;
-
-  var DDSCAPS2_CUBEMAP = 0x200,
-      DDSCAPS2_CUBEMAP_POSITIVEX = 0x400,
-      DDSCAPS2_CUBEMAP_NEGATIVEX = 0x800,
-      DDSCAPS2_CUBEMAP_POSITIVEY = 0x1000,
-      DDSCAPS2_CUBEMAP_NEGATIVEY = 0x2000,
-      DDSCAPS2_CUBEMAP_POSITIVEZ = 0x4000,
-      DDSCAPS2_CUBEMAP_NEGATIVEZ = 0x8000,
-      DDSCAPS2_VOLUME = 0x200000;
-
-  var DDPF_ALPHAPIXELS = 0x1,
-      DDPF_ALPHA = 0x2,
-      DDPF_FOURCC = 0x4,
-      DDPF_RGB = 0x40,
-      DDPF_YUV = 0x200,
-      DDPF_LUMINANCE = 0x20000;
+  // const
+  //     DDPF_ALPHAPIXELS = 0x1,
+  //     DDPF_ALPHA = 0x2,
+  const DDPF_FOURCC = 0x4;
+  // const
+  //     DDPF_RGB = 0x40,
+  //     DDPF_YUV = 0x200,
+  //     DDPF_LUMINANCE = 0x20000;
 
   fourCCToInt32(value) {
 
@@ -214,34 +226,34 @@ Map parseDDS(ByteBuffer buffer, bool loadMipmaps) {
 
   if (fourCC == FOURCC_DXT1) {
     blockBytes = 8;
-    dds["format"] = RGB_S3TC_DXT1_Format;
+    dds.format = RGB_S3TC_DXT1_Format;
   } else if (fourCC == FOURCC_DXT3) {
     blockBytes = 16;
-    dds["format"] = RGBA_S3TC_DXT3_Format;
+    dds.format = RGBA_S3TC_DXT3_Format;
   } else if (fourCC == FOURCC_DXT5) {
     blockBytes = 16;
-    dds["format"] = RGBA_S3TC_DXT5_Format;
+    dds.format = RGBA_S3TC_DXT5_Format;
   } else {
     print("ImageUtils.parseDDS(): Unsupported FourCC code: ${int32ToFourCC( fourCC )}");
   }
 
-  dds["mipmapCount"] = 1;
+  dds.mipmapCount = 1;
 
   if (((header[off_flags] & DDSD_MIPMAPCOUNT) != 0) && (loadMipmaps != false)) {
-    dds["mipmapCount"] = Math.max(1, header[off_mipmapCount]);
+    dds.mipmapCount = Math.max(1, header[off_mipmapCount]);
   }
 
-  dds["width"] = header[off_width];
-  dds["height"] = header[off_height];
+  dds.width = header[off_width];
+  dds.height = header[off_height];
 
   var dataOffset = header[off_size] + 4;
 
   // Extract mipmaps buffers
 
-  var width = dds["width"];
-  var height = dds["height"];
+  num width = dds.width;
+  num height = dds.height;
 
-  for (var i = 0; i < dds["mipmapCount"]; i++) {
+  for (var i = 0; i < dds.mipmapCount; i++) {
 
     int dataLength = Math.max(4, width) ~/ 4 * Math.max(4, height) ~/ 4 * blockBytes;
     var byteArray = new Uint8List.view(buffer, dataOffset, dataLength);
@@ -251,7 +263,7 @@ Map parseDDS(ByteBuffer buffer, bool loadMipmaps) {
       "width": width,
       "height": height
     };
-    dds["mipmaps"].add(mipmap);
+    dds.mipmaps.add(mipmap);
 
     dataOffset += dataLength;
 

@@ -24,8 +24,8 @@ void init() {
 
   scene = new Scene();
 
-  size = new Attribute.float();
-  customColor = new Attribute.color();
+  size = floatAttribute();
+  customColor = colorAttribute();
 
   attributes = {
     "size": size,

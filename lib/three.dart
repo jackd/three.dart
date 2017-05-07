@@ -2,7 +2,7 @@ library three;
 
 import 'dart:async';
 import 'dart:collection';
-import 'dart:html' hide Path;
+import 'dart:html';
 import 'dart:typed_data';
 import 'dart:web_gl' as gl;
 import 'dart:math' as Math;
@@ -12,6 +12,7 @@ import 'src/core/three_math.dart' as ThreeMath;
 export 'src/core/three_math.dart';
 
 import 'package:vector_math/vector_math.dart';
+import 'package:quiver/iterables.dart';
 
 // TODO - Use M1 Re-export ( see: http://code.google.com/p/dart/issues/detail?id=760)
 import 'extras/image_utils.dart' as ImageUtils;
@@ -80,7 +81,6 @@ part 'extras/core/spline_curve.dart';
 part 'extras/core/arc_curve.dart';
 part 'extras/core/ellipse_curve.dart';
 
-part 'extras/core/line_curve3.dart';
 part 'extras/core/quadratic_bezier_curve3.dart';
 part 'extras/core/cubic_bezier_curve3.dart';
 part 'extras/core/spline_curve3.dart';
