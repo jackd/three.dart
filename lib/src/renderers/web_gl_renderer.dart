@@ -739,7 +739,7 @@ class WebGLRenderer implements Renderer {
   }
 
   deleteCustomAttributesBuffers(Geometry geometry) {
-    if (geometry.__webglCustomAttributesList) {
+    if (geometry.__webglCustomAttributesList.length > 0) {
       for (var id in geometry.__webglCustomAttributesList) {
         _gl.deleteBuffer(geometry.__webglCustomAttributesList[id].buffer);
       }
@@ -988,6 +988,7 @@ class WebGLRenderer implements Renderer {
   // Buffer setting
 
   setParticleBuffers(Geometry geometry, int hint, object) {
+    List<Attribute> customAttributes = geometry.__webglCustomAttributesList;
     var v,
         c,
         vertex,
@@ -1004,7 +1005,6 @@ class WebGLRenderer implements Renderer {
         dirtyVertices = geometry.verticesNeedUpdate,
         // dirtyElements = geometry.elementsNeedUpdate,
         dirtyColors = geometry.colorsNeedUpdate,
-        customAttributes = geometry.__webglCustomAttributesList,
         i,
         il,
         ca,
@@ -1436,7 +1436,7 @@ class WebGLRenderer implements Renderer {
       _gl.bufferData(gl.ARRAY_BUFFER, normalArray, hint);
     }
 
-    if (customAttributes) {
+    if (customAttributes.length > 0) {
       for (var i = 0, il = customAttributes.length; i < il; i++) {
         customAttribute = customAttributes[i];
 
@@ -4792,6 +4792,12 @@ class WebGLRenderer implements Renderer {
     if (uniforms.containsKey("shadowMatrix")) {
       var j = 0;
 
+      var shadowMapValue = uniforms["shadowMap"].value;
+      var shadowMapSizeValue = uniforms["shadowMapSize"].value;
+      var shadowMatrixValue = uniforms["shadowMatrix"].value;
+      var shadowDarknessValue = uniforms["shadowDarkness"].value;
+      var shadowBiasValue = uniforms["shadowBias"].value;
+
       for (var i = 0, il = lights.length; i < il; i++) {
         var light = lights[i];
 
@@ -4800,21 +4806,23 @@ class WebGLRenderer implements Renderer {
         if (light is SpotLight ||
             (light is DirectionalLight && !light.shadowCascade)) {
           // Grow the arrays
-          if (uniforms["shadowMap"].value.length < j + 1) {
-            uniforms["shadowMap"].value.length = j + 1;
-            uniforms["shadowMapSize"].value.length = j + 1;
-            uniforms["shadowMatrix"].value.length = j + 1;
-            uniforms["shadowDarkness"].value.length = j + 1;
-            uniforms["shadowBias"].value.length = j + 1;
+          for (var value in [
+            shadowMapValue,
+            shadowMapSizeValue,
+            shadowMatrixValue,
+            shadowDarknessValue,
+            shadowBiasValue
+          ]) {
+            if (value.length < j + 1) {
+              value.length = j + 1;
+            }
           }
 
-          uniforms["shadowMap"].value[j] = light.shadowMap;
-          uniforms["shadowMapSize"].value[j] = light.shadowMapSize;
-
-          uniforms["shadowMatrix"].value[j] = light.shadowMatrix;
-
-          uniforms["shadowDarkness"].value[j] = light.shadowDarkness;
-          uniforms["shadowBias"].value[j] = light.shadowBias;
+          shadowMapValue[j] = light.shadowMap;
+          shadowMapSizeValue[j] = light.shadowMapSize;
+          shadowMatrixValue[j] = light.shadowMatrix;
+          shadowDarknessValue[j] = light.shadowDarkness.toDouble();
+          shadowBiasValue[j] = light.shadowBias.toDouble();
 
           j++;
         }
@@ -4848,8 +4856,8 @@ class WebGLRenderer implements Renderer {
   }
 
   loadUniformsGeneric(Program program, List<List<Uniform>> uniforms) {
-    var uniform, value, type, location, texture, textureUnit, i, il, j, jl;
-
+    var uniform, location, j, jl;
+    // var type, value, texture, textureUnit, i, il;
     jl = uniforms.length;
     for (j = 0; j < jl; j++) {
       location = program.uniforms[uniforms[j][1]];
@@ -4857,114 +4865,7 @@ class WebGLRenderer implements Renderer {
 
       uniform = uniforms[j][0];
 
-      type = uniform.type;
-      value = uniform.typedValue; // Get the value properly typed
-
-      if (type == "i") {
-        // single integer
-
-        _gl.uniform1i(location, value);
-      } else if (type == "f") {
-        // single float
-
-        _gl.uniform1f(location, value);
-      } else if (type == "v2") {
-        // single THREE.Vector2
-
-        _gl.uniform2f(location, value.x, value.y);
-      } else if (type == "v3") {
-        // single THREE.Vector3
-
-        _gl.uniform3f(location, value.x, value.y, value.z);
-      } else if (type == "v4") {
-        // single THREE.Vector4
-
-        _gl.uniform4f(location, value.x, value.y, value.z, value.w);
-      } else if (type == "c") {
-        // single THREE.Color
-
-        _gl.uniform3f(location, value.r, value.g, value.b);
-      } else if (type == "iv1") {
-        // flat array of integers (JS or typed array)
-
-        _gl.uniform1iv(location, value);
-      } else if (type == "iv") {
-        // flat array of integers with 3 x N size (JS or typed array)
-
-        _gl.uniform3iv(location, value);
-      } else if (type == "fv1") {
-        // flat array of floats (JS or typed array)
-
-        _gl.uniform1fv(location, value);
-      } else if (type == "fv") {
-        // flat array of floats with 3 x N size (JS or typed array)
-
-        _gl.uniform3fv(location, value);
-      } else if (type == "v2v") {
-        // array of THREE.Vector2
-
-        _gl.uniform2fv(location, value);
-      } else if (type == "v3v") {
-        // array of THREE.Vector3
-
-        _gl.uniform3fv(location, value);
-      } else if (type == "v4v") {
-        // array of THREE.Vector4
-
-        _gl.uniform4fv(location, value);
-      } else if (type == "m2") {
-        // single THREE.Matrix2
-
-        _gl.uniformMatrix2fv(location, false, value);
-      } else if (type == "m3") {
-        // single THREE.Matrix3
-
-        _gl.uniformMatrix3fv(location, false, value);
-      } else if (type == "m4") {
-        // single THREE.Matrix4
-
-        _gl.uniformMatrix4fv(location, false, value);
-      } else if (type == "m4v") {
-        // array of THREE.Matrix4
-
-        _gl.uniformMatrix4fv(location, false, value);
-      } else if (type == "t") {
-        // single THREE.Texture (2d or cube)
-
-        texture = uniform.value;
-        textureUnit = getTextureUnit();
-
-        _gl.uniform1i(location, textureUnit);
-
-        if (texture == null) continue;
-
-        if ((texture.image is List) && texture.image.length == 6) {
-          setCubeTexture(texture, textureUnit);
-        } else if (texture is WebGLRenderTargetCube) {
-          setCubeTextureDynamic(texture, textureUnit);
-        } else {
-          setTexture(texture, textureUnit);
-        }
-      } else if (type == "tv") {
-        // array of THREE.Texture (2d)
-
-        List<Texture> textures = uniform.value;
-
-        uniform._array = new Int32List.fromList(
-            textures.map((_) => getTextureUnit()).toList());
-
-        _gl.uniform1iv(location, uniform._array);
-
-        il = textures.length;
-        for (i = 0; i < il; i++) {
-          texture = uniform.value[i];
-          textureUnit = uniform._array[i];
-
-          if (texture == null) continue;
-
-          setTexture(texture, textureUnit);
-        }
-      }
+      uniform.load(_gl, location, this);
     }
   }
 
@@ -5173,7 +5074,7 @@ class WebGLRenderer implements Renderer {
         spotExponents.length = spotLength + 1;
 
         spotAnglesCos[spotLength] = Math.cos(light.angle);
-        spotExponents[spotLength] = light.exponent;
+        spotExponents[spotLength] = light.exponent.toDouble();
 
         spotLength += 1;
       } else if (light is HemisphereLight) {
@@ -6543,7 +6444,7 @@ class WebGLGeometry {
       __webglParticleCount,
       __webglVertexCount;
 
-  var __webglCustomAttributesList;
+  List __webglCustomAttributesList;
 }
 
 class WebGLObject {

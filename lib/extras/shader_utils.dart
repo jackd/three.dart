@@ -7,8 +7,8 @@ var lib = {
   "normal": "",
   'cube': new THREE.ShaderMaterial(
       uniforms: {
-        "tCube": new THREE.Uniform.float(),
-        "tFlip": new THREE.Uniform.float(-1.0)
+        "tCube": new THREE.UniformFloat(0),
+        "tFlip": new THREE.UniformFloat(-1.0)
       },
       vertexShader: '''varying vec3 vViewPosition;
             void main() {

@@ -50,11 +50,11 @@ class ShaderProgram {
 
   static Map<String, Uniform> typedUniformMap(var dynamicUniformMap) {
     Map<String, Uniform> typedUniformMap = new Map<String, Uniform>();
-
+    // print(dynamicUniformMap);
     dynamicUniformMap.forEach((name, dynamicUniform) {
       //print(name.toString() + ", " + dynamicUniform.toString());
       typedUniformMap[name] =
-          new Uniform(dynamicUniform['type'], dynamicUniform['value']);
+          uniform(dynamicUniform['type'], dynamicUniform['value']);
     });
 
     return typedUniformMap;

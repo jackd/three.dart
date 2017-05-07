@@ -30,13 +30,13 @@ void init() {
 
   attributes = {"size": size, "customColor": customColor};
 
-  amplitude = new Uniform.float(1.0);
-  color = new Uniform.color(0xffffff);
+  amplitude = new UniformFloat(1.0);
+  color = new UniformColor(0xffffff);
 
   uniforms = {
     "amplitude": amplitude,
     "color": color,
-    "texture": new Uniform.texture(ImageUtils.loadTexture("spark1.png"))
+    "texture": new UniformTexture(ImageUtils.loadTexture("spark1.png"))
   };
 
   var shaderMaterial = new ShaderMaterial(

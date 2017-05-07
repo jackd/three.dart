@@ -37,9 +37,9 @@ void init() {
   displacement = floatAttribute();
   attributes = {"displacement": displacement};
 
-  amplitude = new Uniform.float(1.0);
-  color = new Uniform.color(0xff2200);
-  texture = new Uniform.texture(ImageUtils.loadTexture("textures/water.jpg"));
+  amplitude = new UniformFloat(1.0);
+  color = new UniformColor(0xff2200);
+  texture = new UniformTexture(ImageUtils.loadTexture("textures/water.jpg"));
 
   uniforms = {"amplitude": amplitude, "color": color, "texture": texture};
 

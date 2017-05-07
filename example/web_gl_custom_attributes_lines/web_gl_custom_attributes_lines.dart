@@ -54,9 +54,9 @@ void init() {
 
   attributes = {"displacement": displacement, "customColor": customColor};
 
-  amplitude = new Uniform.float(5.0);
-  opacity = new Uniform.float(0.3);
-  color = new Uniform.color(0xff0000);
+  amplitude = new UniformFloat(5.0);
+  opacity = new UniformFloat(0.3);
+  color = new UniformColor(0xff0000);
 
   uniforms = {"amplitude": amplitude, "opacity": opacity, "color": color};
 

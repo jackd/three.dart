@@ -1386,195 +1386,393 @@ Attribute<Vector3> vector3Attribute([List<Vector3> v]) =>
 Attribute<Vector4> vector4Attribute([List<Vector4> v]) =>
     new Attribute("v4", v);
 
-class Uniform<T> {
-  String type;
-  T _value;
-
-  // cache the typed value
-  bool _dirty = true;
-  List<num> _array;
-
-  Uniform(this.type, value) {
-    this.value = value;
-  }
-
-  T get value => _value;
-  set value(v) {
-    if (type == "f") {
-      v = v.toDouble();
-    }
-    _dirty = true;
-    _value = v;
-  }
-
-  get typedValue {
-    if (!_dirty && (_array != null)) {
-      return _array;
-    }
-
-    if ((type == "fv" || type == "fv1") && !(_value is Float32List)) {
-      _array = new Float32List.fromList(
-          (_value as List).map((_) => _.toDouble()).toList());
-    } else if ((type == "iv" || type == "iv1") && !(_value is Int32List)) {
-      _array = new Int32List.fromList(
-          (_value as List).map((_) => _.toInt()).toList());
-    } else if (type == "v2v") {
-      // array of THREE.Vector2
-
-      var values = _value as List<Vector2>;
-
-      if (_array == null) {
-        _array = new Float32List(2 * values.length);
-      }
-
-      var typedValues = _array as Float32List;
-      var offset;
-
-      for (int i = 0; i < values.length; i++) {
-        offset = i * 2;
-
-        typedValues[offset] = values[i].x;
-        typedValues[offset + 1] = values[i].y;
-      }
-    } else if (type == "v3v") {
-      // array of THREE.Vector3
-
-      var values = _value as List<Vector3>;
-
-      if (_array == null) {
-        _array = new Float32List(3 * values.length);
-      }
-
-      var typedValues = _array as Float32List;
-      var offset;
-
-      for (int i = 0; i < values.length; i++) {
-        offset = i * 3;
-
-        typedValues[offset] = values[i].x;
-        typedValues[offset + 1] = values[i].y;
-        typedValues[offset + 2] = values[i].z;
-      }
-    } else if (type == "v4v") {
-      // array of THREE.Vector4
-
-      var values = _value as List<Vector4>;
-
-      if (_array == null) {
-        _array = new Float32List(4 * values.length);
-      }
-
-      var typedValues = _array as Float32List;
-      var offset;
-
-      for (int i = 0; i < values.length; i++) {
-        offset = i * 4;
-
-        typedValues[offset] = values[i].x;
-        typedValues[offset + 1] = values[i].y;
-        typedValues[offset + 2] = values[i].z;
-        typedValues[offset + 3] = values[i].w;
-      }
-    } else if (type == "m2") {
-      // single THREE.Matrix2
-
-      _array = (_value as Matrix2).storage;
-    } else if (type == "m3") {
-      // single THREE.Matrix3
-
-      _array = (_value as Matrix3).storage;
-    } else if (type == "m4") {
-      // single THREE.Matrix4
-
-      _array = (_value as Matrix4).storage;
-    } else if (type == "m4v") {
-      // array of THREE.Matrix4
-
-      var lst = [];
-
-      (_value as List<Matrix4>).forEach((m) {
-        lst.addAll(m.storage);
-      });
-      _array = new Float32List.fromList(lst);
-    } else {
-      return _value;
-    }
-
-    return _array;
-  }
-
-  Uniform<T> clone() {
-    var dst;
-
-    if (value is Color ||
-        value is Vector2 ||
-        value is Vector3 ||
-        value is Vector4 ||
-        value is Matrix4 ||
-        value is Texture) {
-      dst = (value as dynamic).clone();
-    } else if (value is List) {
-      dst = new List.from(value as List);
-    } else {
-      dst = value;
-    }
-
-    return new Uniform(type, dst);
-  }
-
-  // <Color>
-  factory Uniform.color(num hex) => new Uniform("c", new Color(hex));
-  // <double>
-  factory Uniform.float([double v]) => new Uniform("f", v);
-  // <List<double>>
-  factory Uniform.floatv(List<double> v) => new Uniform("fv", v);
-  factory Uniform.floatv1(List<double> v) => new Uniform("fv1", v);
-
-  // <int>
-  factory Uniform.int([int v]) => new Uniform("i", v);
-  // <List<int>>
-  factory Uniform.intv(List<int> v) => new Uniform("iv", v);
-  factory Uniform.intv1(List<int> v) => new Uniform("iv1", v);
-
-  // <Texture>
-  factory Uniform.texture([Texture texture]) => new Uniform("t", texture);
-  // <List<Texture>>
-  factory Uniform.texturev([List<Texture> textures]) =>
-      new Uniform("tv", textures);
-
-  // <List<Vector2>>
-  factory Uniform.vector2v(List<Vector2> vectors) =>
-      new Uniform("v2v", vectors);
-
-  // <Vector2>
-  factory Uniform.vector2(double x, double y) =>
-      new Uniform("v2", new Vector2(x, y));
-  // <Vector3>
-  factory Uniform.vector3(double x, double y, double z) =>
-      new Uniform("v3", new Vector3(x, y, z));
-  // <Vector4>
-  factory Uniform.vector4(double x, double y, num z, double w) =>
-      new Uniform("v4", new Vector4(x, y, z, w));
-
-  // <Matrix2>
-  factory Uniform.matrix2(Matrix2 m) => new Uniform("m2", m);
-  // <Matrix3>
-  factory Uniform.matrix3(Matrix3 m) => new Uniform("m3", m);
-  // <Matrix4>
-  factory Uniform.matrix4(Matrix4 m) => new Uniform("m4", m);
-  // <List<Matrix4>>
-  factory Uniform.matrix4v(List<Matrix4> m) => new Uniform("m4v", m);
+abstract class Uniform<T> {
+  T get value;
+  void set value(T v);
+  Uniform<T> clone();
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer);
 }
 
-// Uniform<Color> colorUniform(num hex) => new Uniform<Color>("c", new Color(hex));
-// Uniform<double> floatUniform(double v) => new Uniform<double>("f", v);
-// Uniform<List<double>> floatVUniform(List<double> v) => new Uniform<List<double>>("fv", v);
-// Uniform<List<double>> floatV1Uniform(List<double> v) => new Uniform<List<double>>("fv1", v);
-// Uniform<int> intUniform(int v) => new Uniform<int>("i", v);
-// Uniform<List<int>> intVUniform(List<int> v) => new Uniform<List<int>>("iv", v);
-// Uniform<List<int>> intV1Uniform(List<int> v) => new Uniform<List<int>>("iv1", v);
-// Uniform<Texture> textureUniform(Texture texture) => new Uniform("t", texture);
-// Uniform<Texture> texturevUniform(Texture texture) => new Uniform("tv", texture);
+class UniformInt implements Uniform<int> {
+  int value;
+  UniformInt(this.value);
+  UniformInt clone() => new UniformInt(value);
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniform1i(location, value);
+  }
+}
+
+class UniformFloat implements Uniform<double> {
+  double _value;
+  double get value => _value;
+
+  void set value(num v) {
+    _value = v.toDouble();
+  }
+
+  UniformFloat(num value) {
+    this.value = value;
+  }
+  UniformFloat clone() => new UniformFloat(value);
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniform1f(location, value);
+  }
+}
+
+class UniformV2 implements Uniform<Vector2> {
+  Vector2 value;
+  UniformV2(this.value);
+  UniformV2 clone() => new UniformV2(value.clone());
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniform2f(location, value.x, value.y);
+  }
+}
+
+class UniformV3 implements Uniform<Vector3> {
+  Vector3 value;
+  UniformV3(this.value);
+  UniformV3 clone() => new UniformV3(value.clone());
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniform3f(location, value.x, value.y, value.z);
+  }
+}
+
+class UniformV4 implements Uniform<Vector4> {
+  Vector4 value;
+  UniformV4(this.value);
+  UniformV4 clone() => new UniformV4(value.clone());
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniform4f(location, value.x, value.y, value.z, value.w);
+  }
+}
+
+class UniformM2 implements Uniform<Matrix2> {
+  Matrix2 value;
+  UniformM2 clone() => new UniformM2(value.clone());
+  UniformM2(this.value);
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniformMatrix2fv(location, false, value.storage);
+  }
+}
+
+class UniformM3 implements Uniform<Matrix3> {
+  Matrix3 value;
+  UniformM3 clone() => new UniformM3(value.clone());
+  UniformM3(this.value);
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniformMatrix3fv(location, false, value.storage);
+  }
+}
+
+class UniformM4 implements Uniform<Matrix4> {
+  Matrix4 value;
+  UniformM4 clone() => new UniformM4(value.clone());
+  UniformM4(this.value);
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniformMatrix4fv(location, false, value.storage);
+  }
+}
+
+class UniformColor implements Uniform<Color> {
+  Color value;
+  UniformColor(value)
+      : this.value = value is int ? new Color(value) : value as Color;
+  UniformColor clone() => new UniformColor(value.clone());
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniform3f(location, value.r, value.g, value.b);
+  }
+}
+
+class UniformIntList implements Uniform<List<int>> {
+  List<int> value;
+
+  UniformIntList clone() => new UniformIntList(value.toList());
+  UniformIntList(this.value);
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniform1iv(location, new Int32List.fromList(value));
+  }
+}
+
+abstract class UniformFloatList implements Uniform<List<double>> {
+  List<double> value;
+  UniformFloatList(this.value);
+  // void load(gl.RenderingContext ctx, gl.UniformLocation location,
+  //     WebGLRenderer renderer) {
+  //   // print(_value.length);
+  //   // print(_value[0].runtimeType);
+  //   // ctx.uniform3fv(location, _value);
+  //   // print(value);
+  //   // ctx.uniform1fv(location, new Float32List.fromList(value));
+  //   // print('---');
+  //   ctx.uniform3fv(location, new Float32List.fromList(value));
+  // }
+}
+
+class UniformFloatList1 extends UniformFloatList {
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniform1fv(location, new Float32List.fromList(value));
+  }
+
+  UniformFloatList1 clone() => new UniformFloatList1(value.toList());
+  UniformFloatList1(List<double> value) : super(value);
+}
+
+class UniformFloatList3 extends UniformFloatList {
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniform3fv(location, new Float32List.fromList(value));
+  }
+
+  UniformFloatList3 clone() => new UniformFloatList3(value.toList());
+  UniformFloatList3(List<double> value) : super(value);
+}
+
+abstract class _UniformStoredList<T> implements Uniform<List<T>> {
+  List<T> _value;
+  List<T> get value => _value;
+  void set value(List<T> v) {
+    _value = v.toList();
+  }
+
+  List<double> __array;
+  List<double> get _array {
+    _clean();
+    return __array;
+  }
+
+  int get _n;
+
+  void _copyInto(T value, List<double> array, int offset);
+
+  void _clean() {
+    var n = _n;
+    __array = new Float32List(n * _value.length);
+    var vl = _value.length;
+    for (var i = 0; i < vl; ++i) {
+      _copyInto(_value[i], __array, n * i);
+    }
+  }
+
+  _UniformStoredList(List<T> value) {
+    this.value = value;
+  }
+}
+
+abstract class UniformVList<V extends Vector<V>> extends _UniformStoredList<V> {
+  UniformVList(List<V> value) : super(value);
+  void _copyInto(V value, List<double> array, int offset) {
+    value.copyIntoArray(array, offset);
+  }
+}
+
+class UniformV2List extends UniformVList<Vector2> {
+  int get _n => 2;
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniform2fv(location, _array);
+  }
+
+  UniformV2List clone() =>
+      new UniformV2List(_value.map((vi) => vi.clone()).toList());
+  UniformV2List(List<Vector2> value) : super(value);
+}
+
+class UniformV3List extends UniformVList<Vector3> {
+  int get _n => 3;
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniform3fv(location, _array);
+  }
+
+  UniformV3List clone() =>
+      new UniformV3List(_value.map((vi) => vi.clone()).toList());
+  UniformV3List(List<Vector3> value) : super(value);
+}
+
+class UniformV4List extends UniformVList<Vector4> {
+  int get _n => 4;
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniform4fv(location, _array);
+  }
+
+  UniformV4List clone() =>
+      new UniformV4List(_value.map((vi) => vi.clone()).toList());
+  UniformV4List(List<Vector4> value) : super(value);
+}
+
+class UniformM2List extends _UniformStoredList<Matrix2> {
+  int get _n => 2 * 2;
+  void _copyInto(Matrix2 value, List<double> array, int offset) {
+    value.copyIntoArray(array, offset);
+  }
+
+  UniformM2List clone() =>
+      new UniformM2List(_value.map((vi) => vi.clone()).toList());
+  UniformM2List(List<Matrix2> value) : super(value);
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniformMatrix2fv(location, false, _array);
+  }
+}
+
+class UniformM3List extends _UniformStoredList<Matrix3> {
+  void _copyInto(Matrix3 value, List<double> array, int offset) {
+    value.copyIntoArray(array, offset);
+  }
+
+  int get _n => 3 * 3;
+  UniformM3List clone() =>
+      new UniformM3List(_value.map((vi) => vi.clone()).toList());
+  UniformM3List(List<Matrix3> value) : super(value);
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniformMatrix3fv(location, false, _array);
+  }
+}
+
+class UniformM4List extends _UniformStoredList<Matrix4> {
+  void _copyInto(Matrix4 value, List<double> array, int offset) {
+    value.copyIntoArray(array, offset);
+  }
+
+  int get _n => 4 * 4;
+  UniformM4List clone() =>
+      new UniformM4List(_value.map((vi) => vi.clone()).toList());
+  UniformM4List(List<Matrix4> value) : super(value);
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    ctx.uniformMatrix4fv(location, false, _array);
+  }
+}
+
+class UniformTexture implements Uniform<Texture> {
+  Texture value;
+  UniformTexture clone() => new UniformTexture(value.clone());
+  UniformTexture([Texture value]) : this.value = value ?? new Texture();
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    var textureUnit = renderer.getTextureUnit();
+    ctx.uniform1i(location, textureUnit);
+    if (value != null) {
+      var image = value.image;
+      if (image is List && image.length == 6) {
+        renderer.setCubeTexture(value, textureUnit);
+      } else if (value is WebGLRenderTargetCube) {
+        renderer.setCubeTextureDynamic(value, textureUnit);
+      } else {
+        renderer.setTexture(value, textureUnit);
+      }
+    }
+  }
+}
+
+class UniformTextureList implements Uniform<List<Texture>> {
+  List<Texture> _value;
+  List<Texture> get value => _value;
+  void set value(List<Texture> v) {
+    _value = v.toList();
+  }
+
+  UniformTextureList clone() => new UniformTextureList._precopied(
+      _value.map((vi) => vi.clone()).toList());
+  UniformTextureList(List<Texture> value) {
+    this.value = value;
+  }
+  UniformTextureList._precopied(this._value);
+  void load(gl.RenderingContext ctx, gl.UniformLocation location,
+      WebGLRenderer renderer) {
+    var array = new Int32List.fromList(
+        value.map((_) => renderer.getTextureUnit()).toList());
+    ctx.uniform1iv(location, array);
+    var il = value.length;
+    for (var i = 0; i < il; ++i) {
+      var texture = value[i];
+      var unit = array[i];
+      if (texture != null) {
+        renderer.setTexture(texture, unit);
+      }
+    }
+  }
+}
+
+Uniform uniform(String type, value) {
+  switch (type) {
+    case "f":
+      return new UniformFloat(value);
+      break;
+    case "i":
+      return new UniformInt(value);
+      break;
+    case "fv":
+      return new UniformFloatList3(value);
+      break;
+    case "fv1":
+      return new UniformFloatList1(value);
+      break;
+    case "iv":
+    case "iv1":
+      return new UniformIntList(value);
+      break;
+    case "v2":
+      return new UniformV2(value);
+      break;
+    case "v3":
+      return new UniformV3(value);
+      break;
+    case "v4":
+      return new UniformV4(value);
+      break;
+    case "v2v":
+      return new UniformV2List(value);
+      break;
+    case "v3v":
+      return new UniformV3List(value);
+      break;
+    case "v4v":
+      return new UniformV4List(value);
+      break;
+    case "t":
+      return new UniformTexture(value);
+      break;
+    case "tv":
+      return new UniformTextureList(value);
+      break;
+    case "m2":
+      return new UniformM2(value);
+      break;
+    case "m3":
+      return new UniformM3(value);
+      break;
+    case "m4":
+      return new UniformM4(value);
+      break;
+    case "m2v":
+      return new UniformM2List(value);
+      break;
+    case "m3v":
+      return new UniformM3List(value);
+      break;
+    case "m4v":
+      return new UniformM4List(value);
+      break;
+    default:
+      print(type);
+      throw new UnimplementedError('Uniform for type $type not implemented.');
+  }
+}
 
 var __UniformsLib;
 
@@ -1582,68 +1780,69 @@ get UniformsLib {
   if (__UniformsLib == null) {
     __UniformsLib = {
       "common": {
-        "diffuse": new Uniform.color(0xeeeeee),
-        "opacity": new Uniform.float(1.0),
-        "map": new Uniform.texture(),
-        "offsetRepeat": new Uniform.vector4(0.0, 0.0, 1.0, 1.0),
-        "lightMap": new Uniform.texture(),
-        "specularMap": new Uniform.texture(),
-        "envMap": new Uniform.texture(),
-        "flipEnvMap": new Uniform.float(-1.0),
-        "useRefract": new Uniform.int(0),
-        "reflectivity": new Uniform.float(1.0),
-        "refractionRatio": new Uniform.float(0.98),
-        "combine": new Uniform.int(0),
-        "morphTargetInfluences": new Uniform.float(0.0)
+        "diffuse": new UniformColor(0xeeeeee),
+        "opacity": new UniformFloat(1.0),
+        "map": new UniformTexture(),
+        "offsetRepeat": new UniformV4(new Vector4(0.0, 0.0, 1.0, 1.0)),
+        "lightMap": new UniformTexture(),
+        "specularMap": new UniformTexture(),
+        "envMap": new UniformTexture(),
+        "flipEnvMap": new UniformFloat(-1.0),
+        // "useRefract": new UniformFloat(0),
+        "useRefract": new UniformInt(0),
+        "reflectivity": new UniformFloat(1.0),
+        "refractionRatio": new UniformFloat(0.98),
+        "combine": new UniformInt(0),
+        "morphTargetInfluences": new UniformFloat(0.0)
       },
       "bump": {
-        "bumpMap": new Uniform.texture(),
-        "bumpScale": new Uniform.float(1.0)
+        "bumpMap": new UniformTexture(),
+        "bumpScale": new UniformFloat(1.0)
       },
       "normalmap": {
-        "normalMap": new Uniform.texture(),
-        "normalScale": new Uniform.vector2(1.0, 1.0)
+        "normalMap": new UniformTexture(),
+        "normalScale": new UniformV2(new Vector2(1.0, 1.0))
       },
       "fog": {
-        "fogDensity": new Uniform.float(0.00025),
-        "fogNear": new Uniform.float(1.0),
-        "fogFar": new Uniform.float(2000.0),
-        "fogColor": new Uniform.color(0xffffff)
+        "fogDensity": new UniformFloat(0.00025),
+        "fogNear": new UniformFloat(1.0),
+        "fogFar": new UniformFloat(2000.0),
+        "fogColor": new UniformColor(0xffffff)
       },
       "lights": {
-        "ambientLightColor": new Uniform.floatv([]),
-        "directionalLightDirection": new Uniform.floatv([]),
-        "directionalLightColor": new Uniform.floatv([]),
-        "hemisphereLightDirection": new Uniform.floatv([]),
-        "hemisphereLightSkyColor": new Uniform.floatv([]),
-        "hemisphereLightGroundColor": new Uniform.floatv([]),
-        "pointLightColor": new Uniform.floatv([]),
-        "pointLightPosition": new Uniform.floatv([]),
-        "pointLightDistance": new Uniform.floatv1([]),
-        "spotLightColor": new Uniform.floatv([]),
-        "spotLightPosition": new Uniform.floatv([]),
-        "spotLightDirection": new Uniform.floatv([]),
-        "spotLightDistance": new Uniform.floatv1([]),
-        "spotLightAngleCos": new Uniform.floatv1([]),
-        "spotLightExponent": new Uniform.floatv1([])
+        "ambientLightColor": new UniformFloatList3([]),
+        "directionalLightDirection": new UniformFloatList3([]),
+        "directionalLightColor": new UniformFloatList3([]),
+        "hemisphereLightDirection": new UniformFloatList3([]),
+        "hemisphereLightSkyColor": new UniformFloatList3([]),
+        "hemisphereLightGroundColor": new UniformFloatList3([]),
+        "pointLightColor": new UniformFloatList3([]),
+        "pointLightPosition": new UniformFloatList3([]),
+        "pointLightDistance": new UniformFloatList1([]),
+        "spotLightColor": new UniformFloatList3([]),
+        "spotLightPosition": new UniformFloatList3([]),
+        "spotLightDirection": new UniformFloatList3([]),
+        "spotLightDistance": new UniformFloatList1([]),
+        "spotLightAngleCos": new UniformFloatList1([]),
+        "spotLightExponent": new UniformFloatList1([])
       },
       "particle": {
-        "psColor": new Uniform.color(0xeeeeee),
-        "opacity": new Uniform.float(1.0),
-        "size": new Uniform.float(1.0),
-        "scale": new Uniform.float(1.0),
-        "map": new Uniform.texture(),
-        "fogDensity": new Uniform.float(0.00025),
-        "fogNear": new Uniform.float(1.0),
-        "fogFar": new Uniform.float(2000.0),
-        "fogColor": new Uniform.color(0xffffff)
+        "psColor": new UniformColor(0xeeeeee),
+        "opacity": new UniformFloat(1.0),
+        "size": new UniformFloat(1.0),
+        "scale": new UniformFloat(1.0),
+        "map": new UniformTexture(),
+        "fogDensity": new UniformFloat(0.00025),
+        "fogNear": new UniformFloat(1.0),
+        "fogFar": new UniformFloat(2000.0),
+        "fogColor": new UniformColor(0xffffff)
       },
       "shadowmap": {
-        "shadowMap": new Uniform.texturev([]),
-        "shadowMapSize": new Uniform.vector2v([]),
-        "shadowBias": new Uniform.floatv1([]),
-        "shadowDarkness": new Uniform.floatv1([]),
-        "shadowMatrix": new Uniform.matrix4v([]),
+        "shadowMap": new UniformTextureList([]),
+        "shadowMapSize": new UniformV2List([]),
+        "shadowBias": new UniformFloatList1([]),
+        "shadowDarkness": new UniformFloatList1([]),
+        "shadowMatrix": new UniformM4List([]),
       }
     };
   }
@@ -1657,9 +1856,9 @@ get ShaderLib {
     __ShaderLib = {
       'depth': {
         'uniforms': {
-          "mNear": new Uniform.float(1.0),
-          "mFar": new Uniform.float(2000.0),
-          "opacity": new Uniform.float(1.0)
+          "mNear": new UniformFloat(1.0),
+          "mFar": new UniformFloat(2000.0),
+          "opacity": new UniformFloat(1.0)
         },
         'vertexShader': [
           "void main() {",
@@ -1679,7 +1878,7 @@ get ShaderLib {
       },
 
       'normal': {
-        'uniforms': {"opacity": new Uniform.float(1.0)},
+        'uniforms': {"opacity": new UniformFloat(1.0)},
         'vertexShader': [
           "varying vec3 vNormal;",
           "void main() {",
@@ -1761,9 +1960,9 @@ get ShaderLib {
           UniformsLib["lights"],
           UniformsLib["shadowmap"],
           {
-            "ambient": new Uniform.color(0xffffff),
-            "emissive": new Uniform.color(0x000000),
-            "wrapRGB": new Uniform.vector3(1.0, 1.0, 1.0)
+            "ambient": new UniformColor(0xffffff),
+            "emissive": new UniformColor(0x000000),
+            "wrapRGB": new UniformV3(new Vector3(1.0, 1.0, 1.0))
           }
         ]),
         'vertexShader': [
@@ -1862,11 +2061,11 @@ get ShaderLib {
           UniformsLib["lights"],
           UniformsLib["shadowmap"],
           {
-            "ambient": new Uniform.color(0xffffff),
-            "emissive": new Uniform.color(0x000000),
-            "specular": new Uniform.color(0x111111),
-            "shininess": new Uniform.float(30.0),
-            "wrapRGB": new Uniform.vector3(1.0, 1.0, 1.0)
+            "ambient": new UniformColor(0xffffff),
+            "emissive": new UniformColor(0x000000),
+            "specular": new UniformColor(0x111111),
+            "shininess": new UniformFloat(30.0),
+            "wrapRGB": new UniformV3(new Vector3(1.0, 1.0, 1.0))
           }
         ]),
         'vertexShader': [
@@ -1976,9 +2175,9 @@ get ShaderLib {
           UniformsLib["common"],
           UniformsLib["fog"],
           {
-            "scale": new Uniform.float(1.0),
-            "dashSize": new Uniform.float(1.0),
-            "totalSize": new Uniform.float(2.0)
+            "scale": new UniformFloat(1.0),
+            "dashSize": new UniformFloat(1.0),
+            "totalSize": new UniformFloat(2.0)
           }
         ]),
         "vertexShader": [
