@@ -1,5 +1,5 @@
 name: three
-version: 0.2.5+1
+version: 0.3.0-dev
 authors:
 - Robert Silverton <rob.silverton@gmail.com>
 - Nelson Silva <nelson.silva@inevo.pt>
@@ -13,18 +13,14 @@ environment:
   sdk: '>=0.8.10+6 <2.0.0'
 dependencies:
   browser: '>=0.9.0 <0.11.0'
-  # vector_math: '>=1.3.5 <1.5.0'
   # vector_math: '^2.0.0'
   vector_math:
-    path: '../vector_math.dart'
+    git: 'https://github.com/jackd/vector_math.dart.git'
+  # change back to pub version if pull request accepted
   quiver: "^0.25.0"
   datgui:
     git: git://github.com/cgrabowski/datgui.git
   stats:
     git: git://github.com/Dartist/stats.dart.git
-  # analyzer: "^0.30.0"
 dev_dependencies:
-  hop: '>=0.30.0 <0.31.0'
   unittest: any
-  # dart_style: "^1.0.5"
-  # dart_style: any
