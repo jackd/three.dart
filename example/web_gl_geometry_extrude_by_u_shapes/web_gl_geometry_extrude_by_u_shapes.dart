@@ -29,14 +29,13 @@ void main() {
 }
 
 _addGeometry(geometry, color, x, y, z, rx, ry, rz, s) {
-
   // 3d shape
 
-  var mesh = SceneUtils.createMultiMaterialObject(
-      geometry,
-      [
-          new THREE.MeshLambertMaterial(color: color, opacity: 0.2, transparent: true),
-          new THREE.MeshBasicMaterial(color: 0x000000, wireframe: true, opacity: 0.3)]);
+  var mesh = SceneUtils.createMultiMaterialObject(geometry, [
+    new THREE.MeshLambertMaterial(
+        color: color, opacity: 0.2, transparent: true),
+    new THREE.MeshBasicMaterial(color: 0x000000, wireframe: true, opacity: 0.3)
+  ]);
 
   mesh.position.setValues(x.toDouble(), y.toDouble(), z.toDouble() - 75);
   // mesh.rotation.set( rx, ry, rz );
@@ -46,15 +45,14 @@ _addGeometry(geometry, color, x, y, z, rx, ry, rz, s) {
   // if ( geometry.debug ) mesh.add( geometry.debug );
 
   parent.add(mesh);
-
 }
 
 void init() {
-
   container = new Element.tag('div');
   document.body.nodes.add(container);
 
-  camera = new THREE.PerspectiveCamera(50.0, window.innerWidth / window.innerHeight, 1.0, 1000.0);
+  camera = new THREE.PerspectiveCamera(
+      50.0, window.innerWidth / window.innerHeight, 1.0, 1000.0);
   camera.position.setValues(0.0, 150.0, 500.0);
 
   scene = new THREE.Scene();
@@ -67,57 +65,45 @@ void init() {
   parent.position.y = 50.0;
   scene.add(parent);
 
-  var extrudeAmount = 200,
-      extrudeBevelEnabled = true,
-      extrudeBevelSegments = 2;
+  var extrudeAmount = 200, extrudeBevelEnabled = true, extrudeBevelSegments = 2;
 
   extrudeBevelEnabled = false;
 
-  var pts = [],
-      starPoints = 5,
-      l;
+  var pts = [], starPoints = 5, l;
 
   for (var i = 0; i < starPoints * 2; i++) {
-
     if (i % 2 == 1) {
-
       l = 5;
-
     } else {
-
       l = 10;
-
     }
 
     var a = i / starPoints * Math.PI;
     pts.add(new Vector2(Math.cos(a) * l, Math.sin(a) * l));
-
   }
 
   var starShape = new THREE.Shape(pts);
 
   var rnd = new Math.Random();
 
-  var line = new THREE.LineCurve<Vector3>(new Vector3.zero(), new Vector3(100.0, 0.0, 0.0));
-  var line2 = new THREE.LineCurve<Vector3>(new Vector3(100.0, 0.0, 0.0), new Vector3(200.0, 50.0, 0.0));
+  var line = new THREE.LineCurve<Vector3>(
+      new Vector3.zero(), new Vector3(100.0, 0.0, 0.0));
+  var line2 = new THREE.LineCurve<Vector3>(
+      new Vector3(100.0, 0.0, 0.0), new Vector3(200.0, 50.0, 0.0));
 
   var curvepath = new THREE.CurvePath<Vector3>();
   curvepath.add(line);
   curvepath.add(line2);
 
-
   var randomPoints = [new Vector3(200.0, 50.0, 0.0)];
 
   for (var i = 0; i < 5; i++) {
-
-    randomPoints.add(new Vector3(rnd.nextDouble() * 200, rnd.nextDouble() * 200, rnd.nextDouble() * 200));
-
+    randomPoints.add(new Vector3(rnd.nextDouble() * 200, rnd.nextDouble() * 200,
+        rnd.nextDouble() * 200));
   }
 
   var randomSpline = new THREE.SplineCurve3(randomPoints);
   curvepath.add(randomSpline);
-
-
 
   var extrudeUSteps = new List();
   var curvepathLength = curvepath.length;
@@ -125,16 +111,15 @@ void init() {
   var curveSteps = 40;
 
   for (var curve in curvepath.curves) {
-
     if (curve is THREE.LineCurve<Vector3>) {
       // Straight so we only need one step
       initU += (curve.length ~/ curvepathLength);
       extrudeUSteps.add(initU);
-
     } else {
       // Not Straight so we subdivide the curve steps in 'curve_steps' divisions
       for (var d = 0; d <= curveSteps; d++) {
-        extrudeUSteps.add(initU + ((d / curveSteps) * (curve.length / curvepathLength)));
+        extrudeUSteps
+            .add(initU + ((d / curveSteps) * (curve.length / curvepathLength)));
       }
       initU = extrudeUSteps.last;
     }
@@ -150,11 +135,11 @@ void init() {
   circleShape.moveTo(0, circleRadius);
   circleShape.quadraticCurveTo(circleRadius, circleRadius, circleRadius, 0.0);
   circleShape.quadraticCurveTo(circleRadius, -circleRadius, 0.0, -circleRadius);
-  circleShape.quadraticCurveTo(-circleRadius, -circleRadius, -circleRadius, 0.0);
+  circleShape.quadraticCurveTo(
+      -circleRadius, -circleRadius, -circleRadius, 0.0);
   circleShape.quadraticCurveTo(-circleRadius, circleRadius, 0.0, circleRadius);
 
-  var rectLength = 12.0,
-      rectWidth = 4.0;
+  var rectLength = 12.0, rectWidth = 4.0;
 
   var rectShape = new THREE.Shape();
 
@@ -163,7 +148,6 @@ void init() {
   rectShape.lineTo(rectLength / 2, rectWidth / 2);
   rectShape.lineTo(rectLength / 2, -rectLength / 2);
   rectShape.lineTo(-rectLength / 2, -rectLength / 2);
-
 
   // Smiley
 
@@ -196,12 +180,13 @@ void init() {
       bevelSegments: extrudeBevelSegments,
       bevelEnabled: extrudeBevelEnabled,
       steps: extrudeUSteps,
-      extrudePath: extrude_extrudePath); //circleShape rectShape smileyShape starShape
+      extrudePath:
+          extrude_extrudePath); //circleShape rectShape smileyShape starShape
   // var circle3d = new ExtrudeGeometry(circleShape, extrudeBend, extrudeSettings );
 
-  var tube = new THREE.TubeGeometry(extrude_extrudePath, 40, 4.0, 5, false, true);
+  var tube =
+      new THREE.TubeGeometry(extrude_extrudePath, 40, 4.0, 5, false, true);
   // new TubeGeometry(extrudePath, segments, 2, radiusSegments, closed2, debug);
-
 
   _addGeometry(circle3d, 0xff1111, -100, 0, 0, 0, 0, 0, 1);
   _addGeometry(tube, 0x00ff11, 0, 0, 0, 0, 0, 0, 1);
@@ -213,9 +198,10 @@ void init() {
   container.nodes.add(renderer.domElement);
 
   mouseEvts = [
-      document.onMouseDown.listen(onDocumentMouseDown),
-      document.onTouchStart.listen(onDocumentTouchStart),
-      document.onTouchMove.listen(onDocumentTouchMove)];
+    document.onMouseDown.listen(onDocumentMouseDown),
+    document.onTouchStart.listen(onDocumentTouchStart),
+    document.onTouchMove.listen(onDocumentTouchMove)
+  ];
 
   window.onResize.listen(onWindowResize);
 }
@@ -239,9 +225,10 @@ onDocumentMouseDown(MouseEvent event) {
   event.preventDefault();
 
   mouseEvts = [
-      document.onMouseMove.listen(onDocumentMouseMove),
-      document.onMouseUp.listen(onDocumentMouseUp),
-      document.onMouseOut.listen(onDocumentMouseOut)];
+    document.onMouseMove.listen(onDocumentMouseMove),
+    document.onMouseUp.listen(onDocumentMouseUp),
+    document.onMouseOut.listen(onDocumentMouseOut)
+  ];
 
   mouseXOnMouseDown = event.client.x - windowHalfX;
   targetRotationOnMouseDown = targetRotation;
@@ -249,7 +236,8 @@ onDocumentMouseDown(MouseEvent event) {
 
 onDocumentMouseMove(MouseEvent event) {
   mouseX = event.client.x - windowHalfX;
-  targetRotation = (targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.02).toInt();
+  targetRotation =
+      (targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.02).toInt();
 }
 
 onDocumentMouseUp(event) {
@@ -261,29 +249,23 @@ onDocumentMouseOut(event) {
 }
 
 onDocumentTouchStart(TouchEvent event) {
-
   if (event.touches.length == 1) {
-
     event.preventDefault();
 
     mouseXOnMouseDown = event.touches[0].page.x - windowHalfX;
     targetRotationOnMouseDown = targetRotation;
-
   }
-
 }
 
 onDocumentTouchMove(TouchEvent event) {
-
   if (event.touches.length == 1) {
-
     event.preventDefault();
 
     mouseX = event.touches[0].page.x - windowHalfX;
-    targetRotation = (targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.05).toInt();
-
+    targetRotation =
+        (targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.05)
+            .toInt();
   }
-
 }
 
 void animate(num time) {
@@ -292,9 +274,7 @@ void animate(num time) {
 }
 
 render() {
-
   parent.rotation.y += (targetRotation - parent.rotation.y) * 0.05;
 
   renderer.render(scene, camera);
-
 }

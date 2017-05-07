@@ -31,7 +31,8 @@ void init() {
                   ''';
   container.nodes.add(info);
 
-  camera = new PerspectiveCamera(60.0, window.innerWidth / window.innerHeight, 1.0, 1000.0);
+  camera = new PerspectiveCamera(
+      60.0, window.innerWidth / window.innerHeight, 1.0, 1000.0);
   camera.position.z = 500.0;
 
   controls = new TrackballControls(camera);
@@ -65,7 +66,6 @@ void init() {
   var rnd = new Math.Random();
 
   for (var i = 0; i < 500; i++) {
-
     var mesh = new Mesh(geometry, material);
     mesh.position.x = (rnd.nextDouble() - 0.5) * 1000;
     mesh.position.y = (rnd.nextDouble() - 0.5) * 1000;
@@ -73,7 +73,6 @@ void init() {
     mesh.updateMatrix();
     mesh.matrixAutoUpdate = false;
     scene.add(mesh);
-
   }
 
   // Lights
@@ -105,16 +104,13 @@ void init() {
 }
 
 onWindowResize(e) {
-
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   controls.handleResize();
-
 }
-
 
 animate(num time) {
   window.requestAnimationFrame(animate);

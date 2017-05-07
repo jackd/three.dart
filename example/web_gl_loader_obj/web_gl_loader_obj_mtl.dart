@@ -5,8 +5,7 @@ var container, stats;
 
 var camera, cameraTarget, scene, renderer;
 
-var mouseX = 0.0,
-    mouseY = 0.0;
+var mouseX = 0.0, mouseY = 0.0;
 double windowHalfX = window.innerWidth / 2;
 double windowHalfY = window.innerHeight / 2;
 
@@ -19,7 +18,8 @@ init() {
   container = document.createElement('div');
   document.body.append(container);
 
-  camera = new PerspectiveCamera(35.0, window.innerWidth / window.innerHeight, 1.0, 2000.0);
+  camera = new PerspectiveCamera(
+      35.0, window.innerWidth / window.innerHeight, 1.0, 2000.0);
   camera.position.z = 100.0;
 
   // scene
@@ -32,7 +32,6 @@ init() {
   directionalLight.intensity = 1.0;
   directionalLight.position.setValues(0.0, 0.0, 1.0);
   scene.add(directionalLight);
-
 
   // model
   var loader = new OBJLoader();
@@ -53,7 +52,6 @@ onDocumentMouseMove(MouseEvent event) {
   mouseX = (event.client.x - windowHalfX) / 2;
   mouseY = (event.client.y - windowHalfY) / 2;
 }
-
 
 animate(num time) {
   window.requestAnimationFrame(animate);

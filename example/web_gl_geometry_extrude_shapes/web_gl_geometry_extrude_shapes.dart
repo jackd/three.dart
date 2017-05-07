@@ -29,14 +29,12 @@ void main() {
 }
 
 _addGeometry(geometry, color, x, y, z, rx, ry, rz, s) {
-
   // 3d shape
 
-  var mesh = SceneUtils.createMultiMaterialObject(
-      geometry,
-      [
-          new MeshLambertMaterial(color: color, opacity: 0.2, transparent: true),
-          new MeshBasicMaterial(color: 0x000000, wireframe: true, opacity: 0.3)]);
+  var mesh = SceneUtils.createMultiMaterialObject(geometry, [
+    new MeshLambertMaterial(color: color, opacity: 0.2, transparent: true),
+    new MeshBasicMaterial(color: 0x000000, wireframe: true, opacity: 0.3)
+  ]);
 
   mesh.position.setValues(x.toDouble(), y.toDouble(), z.toDouble() - 75);
   // mesh.rotation.set( rx, ry, rz );
@@ -46,15 +44,14 @@ _addGeometry(geometry, color, x, y, z, rx, ry, rz, s) {
   // if ( geometry.debug ) mesh.add( geometry.debug );
 
   parent.add(mesh);
-
 }
 
 void init() {
-
   container = new Element.tag('div');
   document.body.nodes.add(container);
 
-  camera = new PerspectiveCamera(50.0, window.innerWidth / window.innerHeight, 1.0, 1000.0);
+  camera = new PerspectiveCamera(
+      50.0, window.innerWidth / window.innerHeight, 1.0, 1000.0);
   camera.position.setValues(0.0, 150.0, 500.0);
 
   scene = new Scene();
@@ -70,7 +67,8 @@ void init() {
   var extrude_amount = 200,
       extrude_bevelEnabled = true,
       extrude_bevelSegments = 2,
-      extrude_steps = 150; // bevelSegments: 2, steps: 2 , bevelSegments: 5, bevelSize: 8, bevelThickness:5,
+      extrude_steps =
+          150; // bevelSegments: 2, steps: 2 , bevelSegments: 5, bevelSize: 8, bevelThickness:5,
 
   // var extrudePath = new Path();
 
@@ -78,7 +76,6 @@ void init() {
   // extrudePath.lineTo( 10, 10 );
   // extrudePath.quadraticCurveTo( 80, 60, 160, 10 );
   // extrudePath.quadraticCurveTo( 240, -40, 320, 10 );
-
 
   extrude_bevelEnabled = false;
 
@@ -133,14 +130,14 @@ void init() {
   var rnd = new Math.Random();
 
   for (var i = 0; i < 10; i++) {
-
-    randomPoints.add(new Vector3(rnd.nextDouble() * 200, rnd.nextDouble() * 200, rnd.nextDouble() * 200));
-
+    randomPoints.add(new Vector3(rnd.nextDouble() * 200, rnd.nextDouble() * 200,
+        rnd.nextDouble() * 200));
   }
 
   var randomSpline = new SplineCurve3(randomPoints);
 
-  var extrude_extrudePath = randomSpline; // extrudeBend sampleClosedSpline pipeSpline randomSpline
+  var extrude_extrudePath =
+      randomSpline; // extrudeBend sampleClosedSpline pipeSpline randomSpline
 
   // Circle
 
@@ -152,8 +149,7 @@ void init() {
   circleShape.quadraticCurveTo(-circleRadius, -circleRadius, -circleRadius, 0);
   circleShape.quadraticCurveTo(-circleRadius, circleRadius, 0, circleRadius);
 
-  var rectLength = 12,
-      rectWidth = 4;
+  var rectLength = 12, rectWidth = 4;
 
   var rectShape = new Shape();
 
@@ -163,26 +159,17 @@ void init() {
   rectShape.lineTo(rectLength / 2, -rectLength / 2);
   rectShape.lineTo(-rectLength / 2, -rectLength / 2);
 
-
-  var pts = [],
-      starPoints = 5,
-      l;
+  var pts = [], starPoints = 5, l;
 
   for (var i = 0; i < starPoints * 2; i++) {
-
     if (i % 2 == 1) {
-
       l = 5;
-
     } else {
-
       l = 10;
-
     }
 
     var a = i / starPoints * Math.PI;
     pts.add(new Vector2(Math.cos(a) * l, Math.sin(a) * l));
-
   }
 
   var starShape = new Shape(pts);
@@ -218,12 +205,12 @@ void init() {
       bevelSegments: extrude_bevelSegments,
       bevelEnabled: extrude_bevelEnabled,
       steps: extrude_steps,
-      extrudePath: extrude_extrudePath); //circleShape rectShape smileyShape starShape
+      extrudePath:
+          extrude_extrudePath); //circleShape rectShape smileyShape starShape
   // var circle3d = new ExtrudeGeometry(circleShape, extrudeBend, extrudeSettings );
 
   var tube = new TubeGeometry(extrude_extrudePath, 150, 4.0, 5, false, true);
   // new TubeGeometry(extrudePath, segments, 2, radiusSegments, closed2, debug);
-
 
   _addGeometry(circle3d, 0xff1111, -100, 0, 0, 0, 0, 0, 1);
   _addGeometry(tube, 0x00ff11, 0, 0, 0, 0, 0, 0, 1);
@@ -235,9 +222,10 @@ void init() {
   container.nodes.add(renderer.domElement);
 
   mouseEvts = [
-      document.onMouseDown.listen(onDocumentMouseDown),
-      document.onTouchStart.listen(onDocumentTouchStart),
-      document.onTouchMove.listen(onDocumentTouchMove)];
+    document.onMouseDown.listen(onDocumentMouseDown),
+    document.onTouchStart.listen(onDocumentTouchStart),
+    document.onTouchMove.listen(onDocumentTouchMove)
+  ];
 
   window.onResize.listen(onWindowResize);
 }
@@ -261,9 +249,10 @@ onDocumentMouseDown(MouseEvent event) {
   event.preventDefault();
 
   mouseEvts = [
-      document.onMouseMove.listen(onDocumentMouseMove),
-      document.onMouseUp.listen(onDocumentMouseUp),
-      document.onMouseOut.listen(onDocumentMouseOut)];
+    document.onMouseMove.listen(onDocumentMouseMove),
+    document.onMouseUp.listen(onDocumentMouseUp),
+    document.onMouseOut.listen(onDocumentMouseOut)
+  ];
 
   mouseXOnMouseDown = event.client.x - windowHalfX;
   targetRotationOnMouseDown = targetRotation;
@@ -271,7 +260,8 @@ onDocumentMouseDown(MouseEvent event) {
 
 onDocumentMouseMove(MouseEvent event) {
   mouseX = event.client.x - windowHalfX;
-  targetRotation = targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.02;
+  targetRotation =
+      targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.02;
 }
 
 onDocumentMouseUp(event) {
@@ -283,29 +273,22 @@ onDocumentMouseOut(event) {
 }
 
 onDocumentTouchStart(TouchEvent event) {
-
   if (event.touches.length == 1) {
-
     event.preventDefault();
 
     mouseXOnMouseDown = event.touches[0].page.x - windowHalfX;
     targetRotationOnMouseDown = targetRotation;
-
   }
-
 }
 
 onDocumentTouchMove(TouchEvent event) {
-
   if (event.touches.length == 1) {
-
     event.preventDefault();
 
     mouseX = event.touches[0].page.x - windowHalfX;
-    targetRotation = targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.05;
-
+    targetRotation =
+        targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.05;
   }
-
 }
 
 animate(num time) {
@@ -314,9 +297,7 @@ animate(num time) {
 }
 
 render() {
-
   parent.rotation.y += (targetRotation - parent.rotation.y) * 0.05;
 
   renderer.render(scene, camera);
-
 }

@@ -39,9 +39,9 @@ void main() {
 void init() {
   // renderer init
   renderer = new WebGLRenderer()
-      ..autoClear = false
-      //..sortObjects = true
-      ..setSize(window.innerWidth, window.innerHeight);
+    ..autoClear = false
+    //..sortObjects = true
+    ..setSize(window.innerWidth, window.innerHeight);
   document.body.append(renderer.domElement);
 
   // scenes init
@@ -49,12 +49,14 @@ void init() {
   oclscene = new Scene();
 
   // cameras init
-  camera = new PerspectiveCamera(70.0, window.innerWidth / window.innerHeight, 1.0, 100000.0)
-      ..position.z = 280.0
-      ..lookAt(scene.position);
-  oclcamera = new PerspectiveCamera(70.0, window.innerWidth / window.innerHeight, 1.0, 100000.0)
-      ..position = camera.position
-      ..lookAt(scene.position);
+  camera = new PerspectiveCamera(
+      70.0, window.innerWidth / window.innerHeight, 1.0, 100000.0)
+    ..position.z = 280.0
+    ..lookAt(scene.position);
+  oclcamera = new PerspectiveCamera(
+      70.0, window.innerWidth / window.innerHeight, 1.0, 100000.0)
+    ..position = camera.position
+    ..lookAt(scene.position);
 
   //lights init
   scene.add(new AmbientLight(0xffffff)); // primary scene lights
@@ -64,7 +66,8 @@ void init() {
   camera.add(cameraLight);
 
   oclscene.add(new AmbientLight(0xffffff)); // ocl scene lights
-  vlight = new Mesh(new IcosahedronGeometry(50.0, 3), new MeshBasicMaterial(color: COLOR11));
+  vlight = new Mesh(
+      new IcosahedronGeometry(50.0, 3), new MeshBasicMaterial(color: COLOR11));
   vlight.position = pointLight.position;
   oclscene.add(vlight);
 
@@ -73,6 +76,7 @@ void init() {
   void callback(Geometry data) {
     createScene(data);
   }
+
   loader.load('trondisk.json', callback);
 
   // postprocessing
@@ -97,16 +101,18 @@ void init() {
   //grPass.renderToScreen = true;
   oclcomposer.addPass(godrayPass);
 
-
   finalComposer = new EffectComposer(renderer);
   RenderPass renderModel = new RenderPass(scene, camera);
   finalComposer.addPass(renderModel);
 
-  ShaderPass fxaaPass = new ShaderPass(new ShaderProgram.fromThreeish(FXAAShader));
-  fxaaPass.uniforms['resolution'].value.setValues(1 / window.innerWidth, 1 / window.innerHeight);
+  ShaderPass fxaaPass =
+      new ShaderPass(new ShaderProgram.fromThreeish(FXAAShader));
+  fxaaPass.uniforms['resolution'].value
+      .setValues(1 / window.innerWidth, 1 / window.innerHeight);
   finalComposer.addPass(fxaaPass);
 
-  ShaderPass finalPass = new ShaderPass(new ShaderProgram.fromThreeish(AdditiveShader));
+  ShaderPass finalPass =
+      new ShaderPass(new ShaderProgram.fromThreeish(AdditiveShader));
   finalPass.uniforms['tAdd'].value = oclcomposer.readTarget;
   finalPass.renderToScreen = true;
   finalComposer.addPass(finalPass);
@@ -158,22 +164,20 @@ void onWindowResize(Event event) {
 }
 
 void createScene(Geometry geometry) {
-  double x = 0.0,
-      y = -15.0,
-      z = 0.0;
-      // b = 0.0;
+  double x = 0.0, y = -15.0, z = 0.0;
+  // b = 0.0;
 
   MeshBasicMaterial zmat = new MeshBasicMaterial();
   Mesh zmesh = new Mesh(geometry, zmat)
-      ..position.setValues(x, y, z)
-      ..scale.setValues(3.0, 3.0, 3.0);
+    ..position.setValues(x, y, z)
+    ..scale.setValues(3.0, 3.0, 3.0);
   scene.add(zmesh);
 
   MeshBasicMaterial gmat = new MeshBasicMaterial(color: 0x000000);
   Mesh gmesh = new Mesh(geometry, gmat)
-      ..position.setValues(x, y / 2, z)
-      ..rotation = zmesh.rotation
-      ..scale.setValues(1.5, 1.5, 1.5);
+    ..position.setValues(x, y / 2, z)
+    ..rotation = zmesh.rotation
+    ..scale.setValues(1.5, 1.5, 1.5);
   oclscene.add(gmesh);
 
   // extra fancy
@@ -210,7 +214,6 @@ render(double time) {
 
   pointLight.position.setValues(0.0, cos(t / 10) * 65.0, 0.0);
   vlight.updateMatrixWorld();
-
 
   oclcomposer.render(delta);
   finalComposer.render(delta);

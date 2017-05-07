@@ -75,14 +75,14 @@ abstract class Face {
 
     vertexNormals = other.vertexNormals.map((Vector3 v) => v.clone()).toList();
     vertexColors = other.vertexColors.map((Vector3 v) => v.clone()).toList();
-    vertexTangents =
-        other.vertexTangents.map((v) => v.clone()).toList();
+    vertexTangents = other.vertexTangents.map((v) => v.clone()).toList();
 
     return this;
   }
 
   /// Vertex A index.
   int get a => indices[0];
+
   /// Set vertex A index.
   set a(int i) {
     indices[0] = i;
@@ -90,6 +90,7 @@ abstract class Face {
 
   /// Vertex B index.
   int get b => indices[1];
+
   /// Set vertex B index.
   set b(int i) {
     indices[1] = i;
@@ -97,6 +98,7 @@ abstract class Face {
 
   /// Vertex C index.
   int get c => indices[2];
+
   /// Set vertex C index.
   set c(int i) {
     indices[2] = i;

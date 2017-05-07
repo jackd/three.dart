@@ -12,13 +12,12 @@ WebGLRenderer renderer;
 
 Mesh fontmesh;
 
-Future loadFonts() =>
-    Future.wait(["fonts/helvetiker_regular.json"].map((path) => HttpRequest.getString(path).then((data) {
-  FontUtils.loadFace(JSON.decode(data));
-})));
+Future loadFonts() => Future.wait(["fonts/helvetiker_regular.json"]
+    .map((path) => HttpRequest.getString(path).then((data) {
+          FontUtils.loadFace(JSON.decode(data));
+        })));
 
 void main() {
-
   loadFonts().then((_) {
     init();
     animate(0);
@@ -26,21 +25,22 @@ void main() {
 }
 
 void init() {
-
   container = new Element.tag('div');
 
   document.body.nodes.add(container);
 
   scene = new Scene();
 
-  camera = new PerspectiveCamera(70.0, window.innerWidth / window.innerHeight, 1.0, 10000.0);
+  camera = new PerspectiveCamera(
+      70.0, window.innerWidth / window.innerHeight, 1.0, 10000.0);
   camera.position.z = 1200.0;
 
   scene.add(camera);
 
   var fontshapes = FontUtils.generateShapes("Hello world");
 
-  MeshBasicMaterial fontmaterial = new MeshBasicMaterial(color: 0xff0000, side: DoubleSide);
+  MeshBasicMaterial fontmaterial =
+      new MeshBasicMaterial(color: 0xff0000, side: DoubleSide);
 
   ShapeGeometry fontgeometry = new ShapeGeometry(fontshapes, curveSegments: 20);
 
@@ -57,21 +57,17 @@ void init() {
 }
 
 onWindowResize(e) {
-
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
-
 }
 
 animate(num time) {
-
   window.requestAnimationFrame(animate);
 
   fontmesh.rotation.x += 0.005;
   fontmesh.rotation.y += 0.01;
 
   renderer.render(scene, camera);
-
 }

@@ -13,11 +13,11 @@ main() {
 }
 
 init() {
-
   container = document.createElement('div');
   document.body.append(container);
 
-  camera = new PerspectiveCamera(35.0, window.innerWidth / window.innerHeight, 1.0, 15.0);
+  camera = new PerspectiveCamera(
+      35.0, window.innerWidth / window.innerHeight, 1.0, 15.0);
   camera.position.setValues(3.0, 0.15, 3.0);
 
   cameraTarget = new Vector3(0.0, -0.25, 0.0);
@@ -27,22 +27,23 @@ init() {
 
   // Ground
 
-  var plane =
-      new Mesh(new PlaneGeometry(40.0, 40.0), new MeshPhongMaterial(ambient: 0x999999, color: 0x999999, specular: 0x101010));
+  var plane = new Mesh(
+      new PlaneGeometry(40.0, 40.0),
+      new MeshPhongMaterial(
+          ambient: 0x999999, color: 0x999999, specular: 0x101010));
   plane.rotation.x = -Math.PI / 2;
   plane.position.y = -0.5;
   scene.add(plane);
 
   plane.receiveShadow = true;
 
-
   // ASCII file
 
   var loader = new STLLoader();
 
   loader.load('models/stl/ascii/slotted_disk.stl').then((geometry) {
-
-    var material = new MeshPhongMaterial(ambient: 0xff5533, color: 0xff5533, specular: 0x111111, shininess: 200);
+    var material = new MeshPhongMaterial(
+        ambient: 0xff5533, color: 0xff5533, specular: 0x111111, shininess: 200);
     var mesh = new Mesh(geometry, material);
 
     mesh.position.setValues(0.0, -0.25, 0.6);
@@ -55,10 +56,10 @@ init() {
     scene.add(mesh);
   });
 
-
   // Binary files
 
-  var material = new MeshPhongMaterial(ambient: 0x555555, color: 0xAAAAAA, specular: 0x111111, shininess: 200);
+  var material = new MeshPhongMaterial(
+      ambient: 0x555555, color: 0xAAAAAA, specular: 0x111111, shininess: 200);
 
   loader = new STLLoader();
 
@@ -77,7 +78,6 @@ init() {
 
   loader = new STLLoader();
   loader.load('./models/stl/binary/pr2_head_tilt.stl').then((geometry) {
-
     var mesh = new Mesh(geometry, material);
 
     mesh.position.setValues(0.136, -0.37, -0.6);
@@ -88,9 +88,7 @@ init() {
     mesh.receiveShadow = true;
 
     scene.add(mesh);
-
   });
-
 
   // Lights
 
@@ -115,13 +113,10 @@ init() {
 
   container.append(renderer.domElement);
 
-
   window.onResize.listen(onWindowResize);
-
 }
 
 addShadowedLight(x, y, z, color, intensity) {
-
   var directionalLight = new DirectionalLight(color, intensity);
   directionalLight.position.setValues(x, y, z);
   scene.add(directionalLight);
@@ -143,24 +138,19 @@ addShadowedLight(x, y, z, color, intensity) {
 
   directionalLight.shadowBias = -0.005;
   directionalLight.shadowDarkness = 0.15;
-
 }
 
 onWindowResize(_) {
-
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
-
 }
 
 animate(num time) {
-
   window.requestAnimationFrame(animate);
 
   render();
-
 }
 
 var start_time = null;
@@ -180,5 +170,4 @@ render() {
   camera.lookAt(cameraTarget);
 
   renderer.render(scene, camera);
-
 }

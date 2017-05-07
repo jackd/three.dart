@@ -3,17 +3,19 @@ part of three;
 class TorusGeometry extends Geometry {
   num radius, tube, segmentsR, segmentsT, arc;
 
-  TorusGeometry([this.radius = 100, this.tube = 40, this.segmentsR = 8, this.segmentsT = 6, this.arc = Math.PI *
-      2]) : super() {
-
+  TorusGeometry(
+      [this.radius = 100,
+      this.tube = 40,
+      this.segmentsR = 8,
+      this.segmentsT = 6,
+      this.arc = Math.PI * 2])
+      : super() {
     var center = new Vector3.zero();
     var uvs = <UV>[];
     var normals = <Vector3>[];
 
     for (var j = 0; j <= this.segmentsR; j++) {
-
       for (var i = 0; i <= this.segmentsT; i++) {
-
         var u = i / this.segmentsT * this.arc;
         var v = j / this.segmentsR * Math.PI * 2;
 
@@ -31,21 +33,18 @@ class TorusGeometry extends Geometry {
         normals.add(vertex.clone()
           ..sub(center)
           ..normalize());
-
       }
     }
 
-
     for (var j = 1; j <= this.segmentsR; j++) {
-
       for (var i = 1; i <= this.segmentsT; i++) {
-
         var a = (this.segmentsT + 1) * j + i - 1;
         var b = (this.segmentsT + 1) * (j - 1) + i - 1;
         var c = (this.segmentsT + 1) * (j - 1) + i;
         var d = (this.segmentsT + 1) * j + i;
 
-        var face = new Face4(a, b, c, d, [normals[a], normals[b], normals[c], normals[d]]);
+        var face = new Face4(
+            a, b, c, d, [normals[a], normals[b], normals[c], normals[d]]);
         face.normal.add(normals[a]);
         face.normal.add(normals[b]);
         face.normal.add(normals[c]);
@@ -54,12 +53,11 @@ class TorusGeometry extends Geometry {
 
         this.faces.add(face);
 
-        this.faceVertexUvs[0].add([uvs[a].clone(), uvs[b].clone(), uvs[c].clone(), uvs[d].clone()]);
+        this.faceVertexUvs[0].add(
+            [uvs[a].clone(), uvs[b].clone(), uvs[c].clone(), uvs[d].clone()]);
       }
-
     }
 
     this.computeCentroids();
-
   }
 }

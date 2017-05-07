@@ -9,8 +9,7 @@ Scene scene;
 WebGLRenderer renderer;
 
 var windowHalfX, windowHalfY;
-var mouseX = 0,
-    mouseY = 0;
+var mouseX = 0, mouseY = 0;
 
 List objects = [];
 
@@ -25,11 +24,11 @@ void main() {
 }
 
 void init() {
-
   container = new Element.tag('div');
   document.body.nodes.add(container);
 
-  camera = new PerspectiveCamera(60.0, window.innerWidth / window.innerHeight, 1.0, 10000.0);
+  camera = new PerspectiveCamera(
+      60.0, window.innerWidth / window.innerHeight, 1.0, 10000.0);
   camera.position.z = 3200.0;
 
   scene = new Scene();
@@ -38,13 +37,11 @@ void init() {
 
   var loader = new JSONLoader();
   loader.load('obj/Suzanne.js', (geometry) {
-
     geometry.computeVertexNormals();
 
     var rnd = new Math.Random();
 
     for (int i = 0; i < 5000; i++) {
-
       var mesh = new Mesh(geometry, material);
 
       mesh.position.x = rnd.nextDouble() * 8000 - 4000;
@@ -57,9 +54,7 @@ void init() {
       objects.add(mesh);
 
       scene.add(mesh);
-
     }
-
   });
 
   renderer = new WebGLRenderer(clearColorHex: 0xffffff);
@@ -90,20 +85,14 @@ animate(num time) {
 }
 
 render() {
-
   camera.position.x += (mouseX - camera.position.x) * .05;
   camera.position.y += (-mouseY - camera.position.y) * .05;
   camera.lookAt(scene.position);
 
-  for (var i = 0,
-      il = objects.length; i < il; i++) {
-
+  for (var i = 0, il = objects.length; i < il; i++) {
     objects[i].rotation.x += 0.01;
     objects[i].rotation.y += 0.02;
-
   }
 
-
   renderer.render(scene, camera);
-
 }

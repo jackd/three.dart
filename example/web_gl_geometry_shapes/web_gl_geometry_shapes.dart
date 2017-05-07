@@ -30,12 +30,12 @@ void main() {
 }
 
 addGeometry(geometry, points, spacedPoints, color, x, y, z, rx, ry, rz, s) {
-
   // 3d shape
 
-  var mesh = SceneUtils.createMultiMaterialObject(
-      geometry,
-      [new MeshLambertMaterial(color: color), new MeshBasicMaterial(color: 0x000000, wireframe: true, transparent: true)]);
+  var mesh = SceneUtils.createMultiMaterialObject(geometry, [
+    new MeshLambertMaterial(color: color),
+    new MeshBasicMaterial(color: 0x000000, wireframe: true, transparent: true)
+  ]);
   mesh.position.setValues(x, y, z - 75);
   mesh.rotation.setValues(rx, ry, rz);
   mesh.scale.setValues(s, s, s);
@@ -43,7 +43,8 @@ addGeometry(geometry, points, spacedPoints, color, x, y, z, rx, ry, rz, s) {
 
   // solid line
 
-  var line = new Line(points, new LineBasicMaterial(color: color, linewidth: 2));
+  var line =
+      new Line(points, new LineBasicMaterial(color: color, linewidth: 2));
   line.position.setValues(x, y, z + 25);
   line.rotation.setValues(rx, ry, rz);
   line.scale.setValues(s, s, s);
@@ -60,7 +61,8 @@ addGeometry(geometry, points, spacedPoints, color, x, y, z, rx, ry, rz, s) {
   // vertices from real points
 
   var pgeo = GeometryUtils.clone(points);
-  var particles = new ParticleSystem(pgeo, new ParticleBasicMaterial(color: color, size: 2, opacity: 0.75));
+  var particles = new ParticleSystem(
+      pgeo, new ParticleBasicMaterial(color: color, size: 2, opacity: 0.75));
   particles.position.setValues(x, y, z + 75);
   particles.rotation.setValues(rx, ry, rz);
   particles.scale.setValues(s, s, s);
@@ -68,7 +70,8 @@ addGeometry(geometry, points, spacedPoints, color, x, y, z, rx, ry, rz, s) {
 
   // transparent line from equidistance sampled points
 
-  line = new Line(spacedPoints, new LineBasicMaterial(color: color, opacity: 0.2));
+  line =
+      new Line(spacedPoints, new LineBasicMaterial(color: color, opacity: 0.2));
   line.position.setValues(x, y, z + 100);
   line.rotation.setValues(rx, ry, rz);
   line.scale.setValues(s, s, s);
@@ -77,16 +80,15 @@ addGeometry(geometry, points, spacedPoints, color, x, y, z, rx, ry, rz, s) {
   // equidistance sampled points
 
   pgeo = GeometryUtils.clone(spacedPoints);
-  var particles2 = new ParticleSystem(pgeo, new ParticleBasicMaterial(color: color, size: 2, opacity: 0.5));
+  var particles2 = new ParticleSystem(
+      pgeo, new ParticleBasicMaterial(color: color, size: 2, opacity: 0.5));
   particles2.position.setValues(x, y, z + 100);
   particles2.rotation.setValues(rx, ry, rz);
   particles2.scale.setValues(s, s, s);
   parent.add(particles2);
-
 }
 
 roundedRect(ctx, x, y, width, height, radius) {
-
   ctx.moveTo(x, y + radius);
   ctx.lineTo(x, y + height - radius);
   ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
@@ -96,14 +98,14 @@ roundedRect(ctx, x, y, width, height, radius) {
   ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
   ctx.lineTo(x + radius, y);
   ctx.quadraticCurveTo(x, y, x, y + radius);
-
 }
-void init() {
 
+void init() {
   container = new Element.tag('div');
   document.body.nodes.add(container);
 
-  camera = new PerspectiveCamera(50.0, window.innerWidth / window.innerHeight, 1.0, 1000.0);
+  camera = new PerspectiveCamera(
+      50.0, window.innerWidth / window.innerHeight, 1.0, 1000.0);
   camera.position.setValues(0.0, 150.0, 500.0);
 
   scene = new Scene();
@@ -119,7 +121,8 @@ void init() {
   var extrude_amount = 20,
       extrude_bevelEnabled = true,
       extrude_bevelSegments = 2,
-      extrude_steps = 2; // bevelSegments: 2, steps: 2 , bevelSegments: 5, bevelsize: 8, bevelThickness:5,
+      extrude_steps =
+          2; // bevelSegments: 2, steps: 2 , bevelSegments: 5, bevelsize: 8, bevelThickness:5,
 
   // California
 
@@ -170,11 +173,9 @@ void init() {
   var trianglePoints = triangleShape.createPointsGeometry();
   var triangleSpacedPoints = triangleShape.createSpacedPointsGeometry();
 
-
   // Heart
 
-  var x = 0.0,
-      y = 0.0;
+  var x = 0.0, y = 0.0;
 
   var heartShape = new Shape(); // From http://blog.burlock.org/html5/130-paths
 
@@ -217,8 +218,7 @@ void init() {
 
   // Rectangle
 
-  var rectLength = 120.0,
-      rectWidth = 40.0;
+  var rectLength = 120.0, rectWidth = 40.0;
 
   var rectShape = new Shape();
   rectShape.moveTo(0.0, 0.0);
@@ -255,7 +255,8 @@ void init() {
   circleShape.moveTo(0.0, circleRadius);
   circleShape.quadraticCurveTo(circleRadius, circleRadius, circleRadius, 0.0);
   circleShape.quadraticCurveTo(circleRadius, -circleRadius, 0.0, -circleRadius);
-  circleShape.quadraticCurveTo(-circleRadius, -circleRadius, -circleRadius, 0.0);
+  circleShape.quadraticCurveTo(
+      -circleRadius, -circleRadius, -circleRadius, 0.0);
   circleShape.quadraticCurveTo(-circleRadius, circleRadius, 0.0, circleRadius);
 
   var circle3d = circleShape.extrude(
@@ -306,7 +307,6 @@ void init() {
   var arcPoints = arcShape.createPointsGeometry();
   var arcSpacedPoints = arcShape.createSpacedPointsGeometry();
 
-
   // Smiley
 
   var smileyShape = new Shape();
@@ -340,7 +340,6 @@ void init() {
   smileyMouthPath.quadraticCurveTo(5.0, 50.0, 20.0, 40.0);
 
   smileyShape.holes.add(smileyMouthPath);
-
 
   var smiley3d = smileyShape.extrude(
       amount: extrude_amount,
@@ -385,39 +384,26 @@ void init() {
   var splinePoints = splineShape.createPointsGeometry();
   var splineSpacedPoints = splineShape.createSpacedPointsGeometry();
 
-  addGeometry(
-      california3d,
-      californiaPoints,
-      californiaSpacedPoints,
-      0xffaa00,
-      -300.0,
-      -100.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      0.25);
-  addGeometry(triangle3d, trianglePoints, triangleSpacedPoints, 0xffee00, -180.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
-  addGeometry(
-      roundedRect3d,
-      roundedRectPoints,
-      roundedRectSpacedPoints,
-      0x005500,
-      -150.0,
-      150.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      1.0);
-  addGeometry(square3d, squarePoints, squareSpacedPoints, 0x0055ff, 150.0, 100.0, 0.0, 0.0, 0.0, 0.0, 1.0);
-  addGeometry(heart3d, heartPoints, heartSpacedPoints, 0xff1100, 0.0, 100.0, 0.0, Math.PI, 0.0, 0.0, 1.0);
-  addGeometry(circle3d, circlePoints, circleSpacedPoints, 0x00ff11, 120.0, 250.0, 0.0, 0.0, 0.0, 0.0, 1.0);
-  addGeometry(fish3d, fishPoints, fishSpacedPoints, 0x222222, -60.0, 200.0, 0.0, 0.0, 0.0, 0.0, 1.0);
-  addGeometry(splineShape3d, splinePoints, splineSpacedPoints, 0x888888, -50.0, -100.0, -50.0, 0.0, 0.0, 0.0, 0.2);
-  addGeometry(arc3d, arcPoints, arcSpacedPoints, 0xbb4422, 150.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
-  addGeometry(smiley3d, smileyPoints, smileySpacedPoints, 0xee00ff, -270.0, 250.0, 0.0, Math.PI, 0.0, 0.0, 1.0);
-
+  addGeometry(california3d, californiaPoints, californiaSpacedPoints, 0xffaa00,
+      -300.0, -100.0, 0.0, 0.0, 0.0, 0.0, 0.25);
+  addGeometry(triangle3d, trianglePoints, triangleSpacedPoints, 0xffee00,
+      -180.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+  addGeometry(roundedRect3d, roundedRectPoints, roundedRectSpacedPoints,
+      0x005500, -150.0, 150.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+  addGeometry(square3d, squarePoints, squareSpacedPoints, 0x0055ff, 150.0,
+      100.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+  addGeometry(heart3d, heartPoints, heartSpacedPoints, 0xff1100, 0.0, 100.0,
+      0.0, Math.PI, 0.0, 0.0, 1.0);
+  addGeometry(circle3d, circlePoints, circleSpacedPoints, 0x00ff11, 120.0,
+      250.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+  addGeometry(fish3d, fishPoints, fishSpacedPoints, 0x222222, -60.0, 200.0, 0.0,
+      0.0, 0.0, 0.0, 1.0);
+  addGeometry(splineShape3d, splinePoints, splineSpacedPoints, 0x888888, -50.0,
+      -100.0, -50.0, 0.0, 0.0, 0.0, 0.2);
+  addGeometry(arc3d, arcPoints, arcSpacedPoints, 0xbb4422, 150.0, 0.0, 0.0, 0.0,
+      0.0, 0.0, 1.0);
+  addGeometry(smiley3d, smileyPoints, smileySpacedPoints, 0xee00ff, -270.0,
+      250.0, 0.0, Math.PI, 0.0, 0.0, 1.0);
 
   //
 
@@ -428,10 +414,10 @@ void init() {
   container.nodes.add(renderer.domElement);
 
   mouseEvts = [
-      document.onMouseDown.listen(onDocumentMouseDown),
-      document.onTouchStart.listen(onDocumentTouchStart),
-      document.onTouchMove.listen(onDocumentTouchMove)];
-
+    document.onMouseDown.listen(onDocumentMouseDown),
+    document.onTouchStart.listen(onDocumentTouchStart),
+    document.onTouchMove.listen(onDocumentTouchMove)
+  ];
 
   window.onResize.listen(onWindowResize);
 }
@@ -455,9 +441,10 @@ onDocumentMouseDown(MouseEvent event) {
   event.preventDefault();
 
   mouseEvts = [
-      document.onMouseMove.listen(onDocumentMouseMove),
-      document.onMouseUp.listen(onDocumentMouseUp),
-      document.onMouseOut.listen(onDocumentMouseOut)];
+    document.onMouseMove.listen(onDocumentMouseMove),
+    document.onMouseUp.listen(onDocumentMouseUp),
+    document.onMouseOut.listen(onDocumentMouseOut)
+  ];
 
   mouseXOnMouseDown = event.client.x - windowHalfX;
   targetRotationOnMouseDown = targetRotation;
@@ -465,7 +452,8 @@ onDocumentMouseDown(MouseEvent event) {
 
 onDocumentMouseMove(MouseEvent event) {
   mouseX = event.client.x - windowHalfX;
-  targetRotation = targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.02;
+  targetRotation =
+      targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.02;
 }
 
 onDocumentMouseUp(event) {
@@ -477,29 +465,22 @@ onDocumentMouseOut(event) {
 }
 
 onDocumentTouchStart(TouchEvent event) {
-
   if (event.touches.length == 1) {
-
     event.preventDefault();
 
     mouseXOnMouseDown = event.touches[0].page.x - windowHalfX;
     targetRotationOnMouseDown = targetRotation;
-
   }
-
 }
 
 onDocumentTouchMove(TouchEvent event) {
-
   if (event.touches.length == 1) {
-
     event.preventDefault();
 
     mouseX = event.touches[0].page.x - windowHalfX;
-    targetRotation = targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.05;
-
+    targetRotation =
+        targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.05;
   }
-
 }
 
 animate(num time) {
@@ -508,9 +489,7 @@ animate(num time) {
 }
 
 render() {
-
   parent.rotation.y += (targetRotation - parent.rotation.y) * 0.05;
 
   renderer.render(scene, camera);
-
 }

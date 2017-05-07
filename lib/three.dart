@@ -181,7 +181,6 @@ const int BasicShadowMap = 0;
 const int PCFShadowMap = 1;
 const int PCFSoftShadowMap = 2;
 
-
 // MATERIAL CONSTANTS
 
 // side

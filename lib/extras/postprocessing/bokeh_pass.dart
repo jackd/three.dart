@@ -21,9 +21,13 @@ class BokehPass implements Pass {
   bool renderToScreen = false;
   bool clear = false;
 
-  BokehPass(this.scene1, this.camera1, {double focus: 1.0, double aspect, double aperture: 0.025, double maxblur: 1.0,
-      int width, int height}) {
-
+  BokehPass(this.scene1, this.camera1,
+      {double focus: 1.0,
+      double aspect,
+      double aperture: 0.025,
+      double maxblur: 1.0,
+      int width,
+      int height}) {
     if (width == null) {
       width = window.innerWidth;
     }
@@ -32,8 +36,8 @@ class BokehPass implements Pass {
     }
 
     if (aspect == null) aspect = camera1.aspect;
-    renderTargetColor =
-        new WebGLRenderTarget(width, height, minFilter: LinearFilter, magFilter: LinearFilter, format: RGBFormat);
+    renderTargetColor = new WebGLRenderTarget(width, height,
+        minFilter: LinearFilter, magFilter: LinearFilter, format: RGBFormat);
 
     renderTargetDepth = renderTargetColor.clone();
     materialDepth = new MeshDepthMaterial();
@@ -46,8 +50,10 @@ class BokehPass implements Pass {
     uniforms['aperture'].value = aperture;
     uniforms['maxblur'].value = maxblur;
 
-    materialBokeh =
-        new ShaderMaterial(uniforms: uniforms, vertexShader: program.vertexShader, fragmentShader: program.fragmentShader);
+    materialBokeh = new ShaderMaterial(
+        uniforms: uniforms,
+        vertexShader: program.vertexShader,
+        fragmentShader: program.fragmentShader);
 
     scene2 = new Scene();
     camera2 = new OrthographicCamera(-1.0, 1.0, 1.0, -1.0, 0.0, 1.0);
@@ -56,9 +62,8 @@ class BokehPass implements Pass {
     scene2.add(quad);
   }
 
-  void render(WebGLRenderer renderer, WebGLRenderTarget writeBuffer, WebGLRenderTarget readBuffer, double delta,
-      bool maskActive) {
-
+  void render(WebGLRenderer renderer, WebGLRenderTarget writeBuffer,
+      WebGLRenderTarget readBuffer, double delta, bool maskActive) {
     quad.material = materialBokeh;
     scene1.overrideMaterial = materialDepth;
 

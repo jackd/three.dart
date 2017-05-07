@@ -14,25 +14,23 @@ var attributes, displacement, customColor;
 var text = "three.dart",
     height = 15,
     size = 50,
-
     curveSegments = 10,
     steps = 40,
-
     bevelThickness = 5,
     bevelSize = 1.5,
     bevelSegments = 10,
     bevelEnabled = true,
-
-    font = "helvetiker", // helvetiker, optimer, gentilis, droid sans, droid serif
+    font =
+        "helvetiker", // helvetiker, optimer, gentilis, droid sans, droid serif
     weight = "normal", // normal bold
     style = "normal"; // normal italic
 
 var rnd = new Math.Random();
 
-Future loadFonts() =>
-    Future.wait(["fonts/helvetiker_regular.json"].map((path) => HttpRequest.getString(path).then((data) {
-  FontUtils.loadFace(JSON.decode(data));
-})));
+Future loadFonts() => Future.wait(["fonts/helvetiker_regular.json"]
+    .map((path) => HttpRequest.getString(path).then((data) {
+          FontUtils.loadFace(JSON.decode(data));
+        })));
 
 void main() {
   loadFonts().then((_) {
@@ -42,31 +40,25 @@ void main() {
 }
 
 void init() {
-
   container = new Element.tag('div');
   document.body.nodes.add(container);
 
-  camera = new PerspectiveCamera(30.0, window.innerWidth / window.innerHeight, 1.0, 10000.00)..position.z = 400.0;
+  camera = new PerspectiveCamera(
+      30.0, window.innerWidth / window.innerHeight, 1.0, 10000.00)
+    ..position.z = 400.0;
 
   scene = new Scene();
 
   displacement = vector3Attribute();
   customColor = colorAttribute();
 
-  attributes = {
-    "displacement": displacement,
-    "customColor": customColor
-  };
+  attributes = {"displacement": displacement, "customColor": customColor};
 
   amplitude = new Uniform.float(5.0);
   opacity = new Uniform.float(0.3);
   color = new Uniform.color(0xff0000);
 
-  uniforms = {
-    "amplitude": amplitude,
-    "opacity": opacity,
-    "color": color
-  };
+  uniforms = {"amplitude": amplitude, "opacity": opacity, "color": color};
 
   var shaderMaterial = new ShaderMaterial(
       uniforms: uniforms,
@@ -104,7 +96,6 @@ void init() {
   var vertices = object.geometry.vertices;
 
   for (var v = 0; v < vertices.length; v++) {
-
     displacement.value.add(new Vector3.zero());
 
     customColor.value.add(new Color(0xffffff));
@@ -116,8 +107,8 @@ void init() {
   scene.add(object);
 
   renderer = new WebGLRenderer(antialias: true, alpha: false)
-      ..setSize(window.innerWidth, window.innerHeight)
-      ..setClearColorHex(0x050505, 1);
+    ..setSize(window.innerWidth, window.innerHeight)
+    ..setClearColorHex(0x050505, 1);
 
   container.nodes.add(renderer.domElement);
 
@@ -125,7 +116,6 @@ void init() {
 }
 
 onWindowResize(event) {
-
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
@@ -155,7 +145,6 @@ render() {
 
   var il = displacement.value.length;
   for (var i = 0; i < il; i++) {
-
     nx = 0.3 * (0.5 - rnd.nextDouble());
     ny = 0.3 * (0.5 - rnd.nextDouble());
     nz = 0.3 * (0.5 - rnd.nextDouble());
@@ -165,7 +154,6 @@ render() {
     value.x += nx;
     value.y += ny;
     value.z += nz;
-
   }
 
   displacement.needsUpdate = true;

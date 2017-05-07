@@ -16,21 +16,19 @@ void main() {
 }
 
 void init() {
-
   container = new Element.tag('div');
   document.body.nodes.add(container);
 
-  camera = new PerspectiveCamera(40.0, window.innerWidth / window.innerHeight, 1.0, 10000.00)..position.z = 300.0;
+  camera = new PerspectiveCamera(
+      40.0, window.innerWidth / window.innerHeight, 1.0, 10000.00)
+    ..position.z = 300.0;
 
   scene = new Scene();
 
   size = floatAttribute();
   customColor = colorAttribute();
 
-  attributes = {
-    "size": size,
-    "customColor": customColor
-  };
+  attributes = {"size": size, "customColor": customColor};
 
   amplitude = new Uniform.float(1.0);
   color = new Uniform.color(0xffffff);
@@ -50,13 +48,10 @@ void init() {
       depthTest: false,
       transparent: true);
 
-
-
   var radius = 200.0;
   var geometry = new Geometry();
 
   for (var i = 0; i < 100000; i++) {
-
     var vertex = new Vector3.zero();
     vertex.x = rnd.nextDouble() * 2 - 1;
     vertex.y = rnd.nextDouble() * 2 - 1;
@@ -64,7 +59,6 @@ void init() {
     vertex.scale(radius);
 
     geometry.vertices.add(vertex);
-
   }
 
   sphere = new ParticleSystem(geometry, shaderMaterial);
@@ -75,7 +69,6 @@ void init() {
   var vertices = sphere.geometry.vertices;
 
   for (var v = 0; v < vertices.length; v++) {
-
     size.value.add(10.0);
     customColor.value.add(new Color(0xffaa00));
 
@@ -84,7 +77,6 @@ void init() {
     } else {
       customColor.value[v].setHSL(0.0 + 0.1 * (v / vertices.length), 0.9, 0.5);
     }
-
   }
 
   scene.add(sphere);
@@ -99,7 +91,6 @@ void init() {
 }
 
 onWindowResize(event) {
-
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
@@ -123,12 +114,10 @@ render() {
   sphere.rotation.z = delta_in_sec * 0.05;
 
   for (var i = 0; i < size.value.length; i++) {
-
     size.value[i] = 14 + 13 * Math.sin(0.1 * i + (delta_in_sec * 5));
   }
 
   size.needsUpdate = true;
 
   renderer.render(scene, camera);
-
 }

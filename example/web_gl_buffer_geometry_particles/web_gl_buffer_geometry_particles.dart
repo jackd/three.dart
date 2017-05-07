@@ -30,8 +30,8 @@ void init() {
 
   // var positions = new GeometryAttributeFloat32(particles * 3, 3);
   // var colors = new GeometryAttributeFloat32(particles * 3, 3);
-  var positions = float32GeometryAttribute(particles*3, 3);
-  var colors = float32GeometryAttribute(particles*3, 3);
+  var positions = float32GeometryAttribute(particles * 3, 3);
+  var colors = float32GeometryAttribute(particles * 3, 3);
 
   var geometry = new BufferGeometry();
   geometry.attributes = {"position": positions, "color": colors};

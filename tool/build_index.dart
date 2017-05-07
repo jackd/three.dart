@@ -13,8 +13,8 @@ void main() {
       .where((p) => p.substring(p.length - 4) == 'html' && p != 'index.html')
       .toList();
   filenames.sort();
-  var contents = filenames.map(
-    (f) => '<li><a href="$f">$f</a></li>').join('\n      ');
+  var contents =
+      filenames.map((f) => '<li><a href="$f">$f</a></li>').join('\n      ');
   var html = '''
 <html>
   <head>
@@ -36,7 +36,10 @@ void main() {
 </html>
 ''';
 
-  new File('$examplePath/index.html').create()
-    .then((f) => f.openWrite()..write(html)..close())
-    .then((_) => print('Done!'));
+  new File('$examplePath/index.html')
+      .create()
+      .then((f) => f.openWrite()
+        ..write(html)
+        ..close())
+      .then((_) => print('Done!'));
 }

@@ -3,7 +3,6 @@ import 'dart:html';
 import 'dart:math' as Math;
 import 'package:three/three.dart';
 
-
 const TRIANGLES = 500;
 
 Element container;
@@ -20,20 +19,21 @@ void main() {
 }
 
 void init() {
-
   container = document.querySelector('#container');
 
-  camera = new PerspectiveCamera(20.0, window.innerWidth / window.innerHeight, 1.0, 10000.0)..position.z = 1800.0;
+  camera = new PerspectiveCamera(
+      20.0, window.innerWidth / window.innerHeight, 1.0, 10000.0)
+    ..position.z = 1800.0;
 
   scene = new Scene();
 
   var geometry = new BufferGeometry()
     ..aIndex = int16GeometryAttribute(TRIANGLES * 3 * 3)
     ..aPosition = float32GeometryAttribute(TRIANGLES * 3 * 3, 3);
-    // ..aIndex = new GeometryAttributeInt16(TRIANGLES * 3 * 3)
-    // ..aPosition = new GeometryAttributeFloat32(TRIANGLES * 3 * 3);
-      // ..aIndex = new GeometryAttribute.int16(TRIANGLES * 3 * 3)
-      // ..aPosition = new GeometryAttribute.float32(TRIANGLES * 3 * 3, 3);
+  // ..aIndex = new GeometryAttributeInt16(TRIANGLES * 3 * 3)
+  // ..aPosition = new GeometryAttributeFloat32(TRIANGLES * 3 * 3);
+  // ..aIndex = new GeometryAttribute.int16(TRIANGLES * 3 * 3)
+  // ..aPosition = new GeometryAttribute.float32(TRIANGLES * 3 * 3, 3);
 
   var indices = geometry.aIndex.array;
   var i = 0;
@@ -45,7 +45,6 @@ void init() {
   var positions = geometry.aPosition.array;
 
   for (var i = 0; i < positions.length; i += 9) {
-
     var x = rnd.nextDouble() * 400 - 200;
     var y = rnd.nextDouble() * 400 - 200;
     var z = rnd.nextDouble() * 400 - 200;
@@ -61,7 +60,6 @@ void init() {
     positions[i + 6] = x + rnd.nextDouble() * 40 - 20;
     positions[i + 7] = y + rnd.nextDouble() * 40 - 20;
     positions[i + 8] = z + rnd.nextDouble() * 40 - 20;
-
   }
 
   geometry.offsets = [new Chunk(start: 0, count: TRIANGLES * 3, index: 0)];
@@ -74,18 +72,18 @@ void init() {
   mesh = new Mesh(geometry, material);
   scene.add(mesh);
 
-  renderer = new WebGLRenderer(antialias: true)..setSize(window.innerWidth, window.innerHeight);
+  renderer = new WebGLRenderer(antialias: true)
+    ..setSize(window.innerWidth, window.innerHeight);
 
   container.children.add(renderer.domElement);
-
 
   window.onResize.listen(onWindowResize);
 }
 
 onWindowResize(event) {
   camera
-      ..aspect = window.innerWidth / window.innerHeight
-      ..updateProjectionMatrix();
+    ..aspect = window.innerWidth / window.innerHeight
+    ..updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
@@ -97,8 +95,8 @@ animate(num time) {
 
 render() {
   mesh.rotation
-      ..x += 0.01
-      ..y += 0.02;
+    ..x += 0.01
+    ..y += 0.02;
 
   renderer.render(scene, camera);
 }

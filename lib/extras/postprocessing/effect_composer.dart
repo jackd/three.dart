@@ -8,7 +8,6 @@ part of three_postprocessing;
  */
 
 class EffectComposer {
-
   WebGLRenderer renderer;
   WebGLRenderTarget readTarget;
   WebGLRenderTarget writeTarget;
@@ -20,9 +19,7 @@ class EffectComposer {
     this.renderer.autoClear = false;
 
     if (target == null) {
-      target = new WebGLRenderTarget(
-          window.innerWidth,
-          window.innerHeight,
+      target = new WebGLRenderTarget(window.innerWidth, window.innerHeight,
           minFilter: LinearFilter,
           magFilter: LinearFilter,
           format: RGBFormat,
@@ -44,7 +41,6 @@ class EffectComposer {
   void insertPass(pass, index) => passes.insert(index, pass);
 
   void render(double delta) {
-
     maskActive = false;
 
     passes.forEach((Pass pass) {
@@ -53,7 +49,6 @@ class EffectComposer {
       pass.render(renderer, writeTarget, readTarget, delta, maskActive);
 
       if (pass.needsSwap) {
-
         if (maskActive) {
           var context = renderer.context;
 
@@ -76,7 +71,6 @@ class EffectComposer {
   }
 
   void reset([WebGLRenderTarget target = null, int width, int height]) {
-
     if (width == null) {
       width = window.innerWidth;
     }
@@ -84,9 +78,7 @@ class EffectComposer {
       height = window.innerHeight;
     }
     if (target == null) {
-      target = new WebGLRenderTarget(
-          width,
-          height,
+      target = new WebGLRenderTarget(width, height,
           minFilter: LinearFilter,
           magFilter: LinearFilter,
           format: RGBFormat,

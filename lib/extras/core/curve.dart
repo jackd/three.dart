@@ -22,7 +22,6 @@ abstract class Curve<V extends Vector<V>> {
   // Get sequence of points using getPoint( t )
   // TODO(nelsonsilva) - closedPath is only used in Path
   List<V> getPoints([int divisions = 5, closedPath = false]) {
-
     var d, pts = [];
 
     for (d = 0; d <= divisions; d++) {
@@ -191,8 +190,9 @@ abstract class Curve<V extends Vector<V>> {
     if (t2 > 1) t2 = 1;
 
     var pt1 = getPoint(t1);
-    return getPoint(t2)..sub(pt1)..normalize();
-
+    return getPoint(t2)
+      ..sub(pt1)
+      ..normalize();
   }
 
   V getTangentAt(u) {

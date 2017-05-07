@@ -45,53 +45,61 @@ void main() {
 
 void init() {
   renderer = new WebGLRenderer(antialias: false)
-      ..setSize(winWidth, winHeight)
-      ..sortObjects = false;
+    ..setSize(winWidth, winHeight)
+    ..sortObjects = false;
   document.body.append(renderer.domElement);
-  camera = new PerspectiveCamera(70.0, winWidth / winHeight, 1.0, 3000.0)..position.z = 200.0;
+  camera = new PerspectiveCamera(70.0, winWidth / winHeight, 1.0, 3000.0)
+    ..position.z = 200.0;
   container = new Object3D();
   scene = new Scene();
 
-  Texture cubeTexture = ImageUtils.loadTextureCube(
-      ['px', 'nx', 'py', 'ny', 'pz', 'nz'].map((halfaxis) => "textures/" + halfaxis + ".jpg").toList());
+  Texture cubeTexture = ImageUtils.loadTextureCube([
+    'px',
+    'nx',
+    'py',
+    'ny',
+    'pz',
+    'nz'
+  ].map((halfaxis) => "textures/" + halfaxis + ".jpg").toList());
 
-  SphereGeometry geometry = new SphereGeometry(1.0, SPHERE_MERIDIANS, SPHERE_PARALLELS);
+  SphereGeometry geometry =
+      new SphereGeometry(1.0, SPHERE_MERIDIANS, SPHERE_PARALLELS);
 
   materials = new List<Material>();
 
   for (int m = 0; m < GRID_M; ++m) //
-  for (int n = 0; n < GRID_N; ++n) //
-  for (int p = 0; p < GRID_P; ++p) {
+    for (int n = 0; n < GRID_N; ++n) //
+      for (int p = 0; p < GRID_P; ++p) {
+        MeshBasicMaterial material = new MeshBasicMaterial(
+            color: 0xff1100, envMap: cubeTexture, shading: FlatShading);
+        materials.add(material);
+        Mesh mesh = new Mesh(geometry, material);
 
-    MeshBasicMaterial material = new MeshBasicMaterial(color: 0xff1100, envMap: cubeTexture, shading: FlatShading);
-    materials.add(material);
-    Mesh mesh = new Mesh(geometry, material);
+        double x = GRID_SPACING * (m - GRID_M / 2);
+        double y = GRID_SPACING * (n - GRID_N / 2);
+        double z = GRID_SPACING * (p - GRID_P / 2);
 
-    double x = GRID_SPACING * (m - GRID_M / 2);
-    double y = GRID_SPACING * (n - GRID_N / 2);
-    double z = GRID_SPACING * (p - GRID_P / 2);
-
-    mesh.position.setValues(x, y, z);
-    mesh.scale.splat(SPHERE_SCALE);
-    mesh.matrixAutoUpdate = false;
-    mesh.updateMatrix();
-    container.add(mesh);
-    scene.add(mesh);
-  }
+        mesh.position.setValues(x, y, z);
+        mesh.scale.splat(SPHERE_SCALE);
+        mesh.matrixAutoUpdate = false;
+        mesh.updateMatrix();
+        container.add(mesh);
+        scene.add(mesh);
+      }
 
   scene.matrixAutoUpdate = false;
   renderer.autoClear = false;
 
-  composer = new EffectComposer(renderer)..addPass(new RenderPass(scene, camera));
+  composer = new EffectComposer(renderer)
+    ..addPass(new RenderPass(scene, camera));
 
-  bokehPass = new BokehPass(
-      scene,
-      camera,
+  bokehPass = new BokehPass(scene, camera,
       focus: FOCUS,
       aperture: APERTURE,
       maxblur: MAX_BLUR,
       width: winWidth,
-      height: winHeight)..renderToScreen = true;
+      height: winHeight)
+    ..renderToScreen = true;
   composer.addPass(bokehPass);
 
   window.onResize.listen(onWindowResize);
@@ -109,11 +117,7 @@ void init() {
   document.body.append(stats.container);
 }
 
-var effectController = {
-  'focus': 1.0,
-  'aperture': 0.025,
-  'maxblur': 1.0
-};
+var effectController = {'focus': 1.0, 'aperture': 0.025, 'maxblur': 1.0};
 
 void matChanger(var value) {
   bokehPass.uniforms['focus'].value = effectController['focus'];

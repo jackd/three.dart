@@ -8,7 +8,6 @@ part of three;
  * @author seguins
  */
 class MTLLoader {
-
   String _baseUrl = '';
   HashMap _options = new HashMap();
   String _crossOrigin = '';
@@ -16,14 +15,17 @@ class MTLLoader {
   /// Creates a new MTLLoader
   ///
   /// Options are the same of [MaterialCreator]
-  MTLLoader([String this._baseUrl, HashMap this._options, String this._crossOrigin]);
+  MTLLoader(
+      [String this._baseUrl, HashMap this._options, String this._crossOrigin]);
 
   /// Loads MTL from an url;
   Future<MaterialCreator> load(String url) {
     if (!url.startsWith('/')) {
       url = this._baseUrl + url;
     }
-    return HttpRequest.request(url, responseType: "String").then((req) => parse(req.response));
+    return HttpRequest
+        .request(url, responseType: "String")
+        .then((req) => parse(req.response));
   }
 
   /// Parses [text] loaded MTL file
@@ -53,7 +55,11 @@ class MTLLoader {
       } else if (info.isNotEmpty) {
         if (key == "ka" || key == "kd" || key == "ks") {
           List<String> ss = value.split(delimiter_pattern);
-          info[key] = [double.parse(ss[0]), double.parse(ss[1]), double.parse(ss[2])];
+          info[key] = [
+            double.parse(ss[0]),
+            double.parse(ss[1]),
+            double.parse(ss[2])
+          ];
         } else {
           info[key] = value;
         }
@@ -64,11 +70,9 @@ class MTLLoader {
     materialCreator.materials = materialsInfo;
     return materialCreator;
   }
-
 }
 
 class MaterialCreator {
-
   String _baseUrl = "";
   HashMap _options;
   String _crossOrigin = "";
@@ -93,8 +97,8 @@ class MaterialCreator {
   ///         Default: false
   ///       invertTransparency: If transparency need to be inverted (inversion is needed if d = 0 is fully opaque)
   ///         Default: false (d = 1 is fully opaque)
-  MaterialCreator(String this._baseUrl, [HashMap this._options, String this._crossOrigin]) {
-
+  MaterialCreator(String this._baseUrl,
+      [HashMap this._options, String this._crossOrigin]) {
     if (_options != null) {
       if (_options.containsKey("side")) {
         _side = _options["side"];
@@ -136,11 +140,13 @@ class MaterialCreator {
             case 'ka':
             case 'ks':
               // Diffuse color (color under white light) using RGB values
-              if (_options.containsKey("normalizeRGB") && _options["normalizeRGB"]) {
+              if (_options.containsKey("normalizeRGB") &&
+                  _options["normalizeRGB"]) {
                 value = [value[0] / 255, value[1] / 255, value[2] / 255];
               }
 
-              if (_options.containsKey("ignoreZeroRGBs") && _options["ignoreZeroRGBs"]) {
+              if (_options.containsKey("ignoreZeroRGBs") &&
+                  _options["ignoreZeroRGBs"]) {
                 if (value[0] == 0 && value[1] == 0 && value[1] == 0) {
                   // ignore
                   save = false;
@@ -151,7 +157,8 @@ class MaterialCreator {
               // According to MTL format (http://paulbourke.net/dataformats/mtl/):
               //   d is dissolve for current material
               //   factor of 1.0 is fully opaque, a factor of 0 is fully dissolved (completely transparent)
-              if (_options.containsKey("invertTransparency") && _options["invertTransparency"]) {
+              if (_options.containsKey("invertTransparency") &&
+                  _options["invertTransparency"]) {
                 value = 1 - value;
               }
               break;
@@ -205,10 +212,7 @@ class MaterialCreator {
   Future<Material> _createMaterial(String materialName) {
     // Create material
     var mat = this._materialsInfo[materialName];
-    var params = {
-      "name": materialName,
-      "side": this._side
-    };
+    var params = {"name": materialName, "side": this._side};
 
     var mapLoaded;
 
@@ -281,19 +285,22 @@ class MaterialCreator {
     return completer.future;
   }
 
-  MeshPhongMaterial _createMeshPhongMaterial(params) =>
-      new MeshPhongMaterial(
-          name: params['name'],
-          side: params['side'],
-          color: params.containsKey('color') ? (params['color'] as Color).getHex() : 0xffffff,
-          ambient: params.containsKey('ambient') ? (params['ambient'] as Color).getHex() : 0xffffff,
-          transparent: params.containsKey('transparent') ? params['transparent'] : false,
-          opacity: params.containsKey('opacity') ? params['opacity'] : 1,
-          shininess: params.containsKey('shininess') ? params['shininess'] : 30,
-          map: params.containsKey('map') ? params['map'] : null);
+  MeshPhongMaterial _createMeshPhongMaterial(params) => new MeshPhongMaterial(
+      name: params['name'],
+      side: params['side'],
+      color: params.containsKey('color')
+          ? (params['color'] as Color).getHex()
+          : 0xffffff,
+      ambient: params.containsKey('ambient')
+          ? (params['ambient'] as Color).getHex()
+          : 0xffffff,
+      transparent:
+          params.containsKey('transparent') ? params['transparent'] : false,
+      opacity: params.containsKey('opacity') ? params['opacity'] : 1,
+      shininess: params.containsKey('shininess') ? params['shininess'] : 30,
+      map: params.containsKey('map') ? params['map'] : null);
 
   Future<Texture> _loadTexture(String url, [mapping]) {
-
     var imageLoader = new ImageLoader();
     imageLoader.crossOrigin = _crossOrigin;
 
@@ -333,5 +340,4 @@ class MaterialCreator {
     }
     return x + 1;
   }
-
 }

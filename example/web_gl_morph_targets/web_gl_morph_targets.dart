@@ -7,10 +7,8 @@ PerspectiveCamera camera;
 Scene scene;
 WebGLRenderer renderer;
 Mesh mesh;
-num windowHalfX = window.innerWidth / 2,
-    windowHalfY = window.innerHeight / 2;
-num mouseX = 0,
-    mouseY = 0;
+num windowHalfX = window.innerWidth / 2, windowHalfY = window.innerHeight / 2;
+num mouseX = 0, mouseY = 0;
 
 void main() {
   init();
@@ -18,17 +16,19 @@ void main() {
 }
 
 void init() {
-
   var idx = 0;
-  (querySelectorAll("input[type='range']") as List<InputElement>).forEach((InputElement input) {
+  (querySelectorAll("input[type='range']") as List<InputElement>)
+      .forEach((InputElement input) {
     var n = idx++;
-    input.onChange.listen((_) => mesh.morphTargetInfluences[n] = input.valueAsNumber / 100);
+    input.onChange.listen(
+        (_) => mesh.morphTargetInfluences[n] = input.valueAsNumber / 100);
   });
 
   container = new Element.tag('div');
   document.body.nodes.add(container);
 
-  camera = new PerspectiveCamera(45.0, window.innerWidth / window.innerHeight, 1.0, 15000.0);
+  camera = new PerspectiveCamera(
+      45.0, window.innerWidth / window.innerHeight, 1.0, 15000.0);
   camera.position.z = 500.0;
 
   scene = new Scene();
@@ -44,31 +44,25 @@ void init() {
 
   // construct 8 blend shapes
   for (var i = 0; i < geometry.vertices.length; i++) {
-
     var vertices = [];
 
     for (var v = 0; v < geometry.vertices.length; v++) {
-
       vertices.add(geometry.vertices[v].clone());
 
       if (v == i) {
-
         vertices[vertices.length - 1].x *= 2;
         vertices[vertices.length - 1].y *= 2;
         vertices[vertices.length - 1].z *= 2;
-
       }
-
     }
 
-    geometry.morphTargets.add(new MorphTarget(name: "target$i", vertices: vertices));
-
+    geometry.morphTargets
+        .add(new MorphTarget(name: "target$i", vertices: vertices));
   }
 
   mesh = new Mesh(geometry, material);
 
   scene.add(mesh);
-
 
   renderer = new WebGLRenderer(clearColorHex: 0x222222, clearAlpha: 1);
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -78,11 +72,9 @@ void init() {
 
   window.onResize.listen(onWindowResize);
   document.onMouseMove.listen(onDocumentMouseMove);
-
 }
 
 onWindowResize(event) {
-
   windowHalfX = window.innerWidth / 2;
   windowHalfY = window.innerHeight / 2;
 
@@ -103,7 +95,6 @@ animate(num time) {
 }
 
 render() {
-
   mesh.rotation.y += 0.01;
 
   camera.position.y += (-mouseY - camera.position.y) * .01;

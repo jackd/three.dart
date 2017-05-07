@@ -4,7 +4,7 @@ import 'dart:math' as Math;
 import 'package:three/three.dart';
 import 'package:three/extras/renderers/canvas_renderer.dart';
 
-Element container;// stats;
+Element container; // stats;
 
 PerspectiveCamera camera;
 Scene scene;
@@ -13,8 +13,7 @@ CanvasRenderer renderer;
 CubeGeometry geometry;
 Object3D group;
 
-num mouseX = 0,
-    mouseY = 0;
+num mouseX = 0, mouseY = 0;
 
 num windowHalfX;
 num windowHalfY;
@@ -26,7 +25,6 @@ void main() {
   animate(0);
 }
 
-
 void init() {
   windowHalfX = window.innerWidth / 2;
   windowHalfY = window.innerHeight / 2;
@@ -36,7 +34,8 @@ void init() {
 
   scene = new Scene();
 
-  camera = new PerspectiveCamera(60.0, window.innerWidth / window.innerHeight, 1.0, 10000.0);
+  camera = new PerspectiveCamera(
+      60.0, window.innerWidth / window.innerHeight, 1.0, 10000.0);
   camera.position.z = 500.0;
 
   scene.add(camera);
@@ -75,7 +74,6 @@ void init() {
   // renderer.sortObjects = false;
   //container.appendChild( renderer.domElement );
   container.nodes.add(renderer.domElement);
-
 }
 
 void onDocumentMouseMove(event) {

@@ -10,7 +10,6 @@ var camera, cameraControls, spot1, spot2, dirLight, mainObj, sunDial;
 
 // init the scene
 init() {
-
   renderer = new WebGLRenderer(antialias: true);
   renderer.shadowMapEnabled = true;
   renderer.shadowMapType = PCFSoftShadowMap;
@@ -23,7 +22,8 @@ init() {
   scene = new Scene();
 
   // put a camera in the scene
-  camera = new PerspectiveCamera(70.0, window.innerWidth / window.innerHeight, 1.0, 10000.0);
+  camera = new PerspectiveCamera(
+      70.0, window.innerWidth / window.innerHeight, 1.0, 10000.0);
   camera.position.setValues(0.0, 2.0, 14.0);
   scene.add(camera);
 
@@ -49,7 +49,6 @@ init() {
   spot1.shadowDarkness = 0.5;
   //light.shadowCameraVisible = true;
   scene.add(spot1);
-
 
   spot2 = new SpotLight(0xFFAA88, 2.0);
   spot2.target.position.setValues(0.0, 2.0, 0.0);
@@ -119,7 +118,6 @@ animate(time) {
 
 // render the scene
 render() {
-
   var seconds = new DateTime.now().millisecondsSinceEpoch / 1000;
   var piPerSeconds = seconds * Math.PI;
 

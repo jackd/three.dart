@@ -27,7 +27,8 @@ class Game {
     container = new Element.tag('div');
     document.body.nodes.add(container);
 
-    camera = new THREE.PerspectiveCamera(75.0, window.innerWidth / window.innerHeight, 1.0, 10000.0);
+    camera = new THREE.PerspectiveCamera(
+        75.0, window.innerWidth / window.innerHeight, 1.0, 10000.0);
 
     scene = new THREE.Scene();
 
@@ -47,8 +48,9 @@ class Game {
   void makeParticles() {
     var rng = new Math.Random();
     for (var i = 0; i < 500; i++) {
-      var material =
-          new THREE.ParticleCanvasMaterial(color: rng.nextDouble() * 0x808080 + 0x808080, program: particleRender);
+      var material = new THREE.ParticleCanvasMaterial(
+          color: rng.nextDouble() * 0x808080 + 0x808080,
+          program: particleRender);
       var particle = new THREE.Particle(material);
 
       particle.position.x = rng.nextDouble() * 1000 - 500;

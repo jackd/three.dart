@@ -5,23 +5,13 @@ import 'package:three/three.dart';
 var rand = new Math.Random();
 var container, stats;
 var camera, scene, renderer, poptart, face, feet, tail;
-var stars,
-    numStars = 10,
-    rainbow,
-    rainChunk,
-    numRainChunks = 30;
-var mouseX = 0,
-    mouseY = 0;
+var stars, numStars = 10, rainbow, rainChunk, numRainChunks = 30;
+var mouseX = 0, mouseY = 0;
 double windowHalfX = window.innerWidth / 2;
 double windowHalfY = window.innerHeight / 2;
-var deltaSum = 0.0,
-    tick = 0,
-    frame = 0,
-    running = true;
+var deltaSum = 0.0, tick = 0, frame = 0, running = true;
 
-var song = new AudioElement(),
-    song2 = new AudioElement();
-
+var song = new AudioElement(), song2 = new AudioElement();
 
 main() {
   document.body.children.add(song);
@@ -44,7 +34,8 @@ init() {
   container = new DivElement();
   document.body.children.add(container);
 
-  camera = new PerspectiveCamera(45.0, window.innerWidth / window.innerHeight, 0.1, 10000.0);
+  camera = new PerspectiveCamera(
+      45.0, window.innerWidth / window.innerHeight, 0.1, 10000.0);
   camera.position.z = 30.0;
   camera.position.x = 0.0;
   camera.position.y = 0.0;
@@ -208,10 +199,12 @@ init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   container.nodes.add(renderer.domElement);
 }
+
 animate(t) {
   window.requestAnimationFrame(animate);
   render(t);
 }
+
 render(t) {
   var delta = t; //clock.getDelta();
   if (running) deltaSum += delta;
@@ -240,7 +233,7 @@ render(t) {
       stars[0][c].position.z = tempZ;
     }
     switch (frame) {
-      case 0://2nd frame
+      case 0: //2nd frame
         face.position.x++;
         feet.position.x++;
         break;
@@ -270,7 +263,7 @@ render(t) {
         rainbow.position.x -= 9.0;
         rainChunk.position.x += (8.0 * (numRainChunks - 1)) - 1;
         break;
-      case 6://8th frame
+      case 6: //8th frame
         face.position.x++;
         feet.position.x++;
         break;
@@ -294,7 +287,7 @@ render(t) {
       case 10:
         face.position.y++;
         break;
-      case 11://1st frame
+      case 11: //1st frame
         poptart.position.y++;
         feet.position.y++;
         rainbow.position.x += 9.0;
@@ -310,7 +303,8 @@ render(t) {
 
 helper(o, x, y, z, w, h, d, c) {
   var material = new MeshLambertMaterial(color: c);
-  var geometry = new CubeGeometry(w.toDouble(), h.toDouble(), d.toDouble(), 1, 1, 1);
+  var geometry =
+      new CubeGeometry(w.toDouble(), h.toDouble(), d.toDouble(), 1, 1, 1);
   var mesh = new Mesh(geometry, material);
   mesh.position.x = x.toDouble() + (w.toDouble() / 2.0);
   mesh.position.y = y.toDouble() - (h.toDouble() / 2.0);
@@ -360,6 +354,7 @@ buildStar(star, state) {
       break;
   }
 }
+
 onDocumentMouseMove(event) {
   mouseX = (event.client.x - windowHalfX);
   mouseY = (event.client.y - windowHalfY);

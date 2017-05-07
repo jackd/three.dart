@@ -11,8 +11,7 @@ CanvasRenderer renderer;
 Material material;
 Geometry geometry;
 
-int mouseX = 0,
-    mouseY = 0;
+int mouseX = 0, mouseY = 0;
 int windowHalfX = 0;
 int windowHalfY = 0;
 
@@ -24,7 +23,8 @@ init() {
   container = new Element.tag('div');
   document.body.nodes.add(container);
 
-  camera = new PerspectiveCamera(75.0, window.innerWidth / window.innerHeight, 1.0, 10000.0);
+  camera = new PerspectiveCamera(
+      75.0, window.innerWidth / window.innerHeight, 1.0, 10000.0);
   camera.position.z = 100.0;
 
   scene = new Scene();
@@ -41,12 +41,14 @@ init() {
 
   // particles
   final num Tau = Math.PI * 2;
-  material = new ParticleCanvasMaterial(color: 0xffffff, program: (CanvasRenderingContext2D context) {
-    context.beginPath();
-    context.arc(0, 0, 1, 0, Tau, false);
-    context.closePath();
-    context.fill();
-  });
+  material = new ParticleCanvasMaterial(
+      color: 0xffffff,
+      program: (CanvasRenderingContext2D context) {
+        context.beginPath();
+        context.arc(0, 0, 1, 0, Tau, false);
+        context.closePath();
+        context.fill();
+      });
 
   geometry = new Geometry();
 
@@ -67,13 +69,13 @@ init() {
 
   // lines
 
-  var line = new Line(geometry, new LineBasicMaterial(color: 0xffffff, opacity: 0.5));
+  var line =
+      new Line(geometry, new LineBasicMaterial(color: 0xffffff, opacity: 0.5));
   scene.add(line);
 
   document.onMouseMove.listen(onDocumentMouseMove);
   document.onTouchStart.listen(onDocumentTouchStart);
   document.onTouchMove.listen(onDocumentTouchMove);
-
 }
 
 onDocumentMouseMove(MouseEvent event) {
@@ -83,7 +85,6 @@ onDocumentMouseMove(MouseEvent event) {
 
 onDocumentTouchStart(TouchEvent event) {
   if (event.touches.length > 1) {
-
     event.preventDefault();
 
     mouseX = event.touches[0].page.x - windowHalfX;
@@ -93,7 +94,6 @@ onDocumentTouchStart(TouchEvent event) {
 
 onDocumentTouchMove(TouchEvent event) {
   if (event.touches.length == 1) {
-
     event.preventDefault();
 
     mouseX = event.touches[0].page.x - windowHalfX;

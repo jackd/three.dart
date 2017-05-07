@@ -10,7 +10,6 @@ part of three;
  */
 
 class Color {
-
   double _r;
   double _g;
   double _b;
@@ -19,6 +18,7 @@ class Color {
   set r(num r) {
     _r = r.toDouble();
   }
+
   /// Gets the red component. The value will be between 0 and 1.
   double get r => _r;
 
@@ -26,6 +26,7 @@ class Color {
   set g(num g) {
     _g = g.toDouble();
   }
+
   /// Gets the green component. The value will be between 0 and 1.
   double get g => _g;
 
@@ -33,13 +34,16 @@ class Color {
   set b(num b) {
     _b = b.toDouble();
   }
+
   /// Gets the blue component. The value will be between 0 and 1.
   double get b => _b;
 
   /// Gets the red component as a value between 0 and 255.
   int get rr => (r * 255).floor();
+
   /// Gets the green component as a value between 0 and 255.
   int get gg => (g * 255).floor();
+
   /// Gets the blue component as a value between 0 and 255.
   int get bb => (b * 255).floor();
 
@@ -48,7 +52,6 @@ class Color {
       : _r = 1.0,
         _g = 1.0,
         _b = 1.0 {
-
     if (hex is num) setHex(hex);
   }
 
@@ -58,7 +61,6 @@ class Color {
     g = array[1].toDouble();
     b = array[2].toDouble();
   }
-
 
   /// Copies the color and returns this color.
   Color copy(Color color) {
@@ -80,7 +82,6 @@ class Color {
 
   /// Copies the given color making conversions from linear to gamma space.
   Color copyLinearToGamma(Color color) {
-
     r = Math.sqrt(color.r);
     g = Math.sqrt(color.g);
     b = Math.sqrt(color.b);
@@ -90,9 +91,7 @@ class Color {
 
   /// Converts this color from gamma to linear space.
   Color convertGammaToLinear() {
-    var _r = r,
-        _g = g,
-        _b = b;
+    var _r = r, _g = g, _b = b;
 
     r = _r * _r;
     g = _g * _g;
@@ -177,20 +176,15 @@ class Color {
   /// HSL ranges are in 0.0 - 1.0.
   Color setHSL(double h, double s, double l) {
     if (s == 0) {
-
       r = g = b = l;
-
     } else {
-
       var hue2rgb = (p, q, t) {
-
         if (t < 0) t += 1;
         if (t > 1) t -= 1;
         if (t < 1 / 6) return p + (q - p) * 6 * t;
         if (t < 1 / 2) return q;
         if (t < 2 / 3) return p + (q - p) * 6 * (2 / 3 - t);
         return p;
-
       };
 
       var p = l <= 0.5 ? l * (1 + s) : l + s - (l * s);
@@ -199,19 +193,15 @@ class Color {
       this.r = hue2rgb(q, p, h + 1 / 3);
       this.g = hue2rgb(q, p, h);
       this.b = hue2rgb(q, p, h - 1 / 3);
-
     }
 
     return this;
-
   }
 
   /// Gets this color as HSL (returned as [hue, saturation, lightness]).
   /// HSL ranges are in 0.0 - 1.0.
   List<double> get HSL {
-    var r = this.r,
-        g = this.g,
-        b = this.b;
+    var r = this.r, g = this.g, b = this.b;
 
     var max = Math.max(Math.max(r, g), b);
     var min = Math.min(Math.min(r, g), b);
@@ -220,15 +210,13 @@ class Color {
     var lightness = (min + max) / 2.0;
 
     if (min == max) {
-
       hue = 0;
       saturation = 0;
-
     } else {
-
       var delta = max - min;
 
-      saturation = lightness <= 0.5 ? delta / (max + min) : delta / (2 - max - min);
+      saturation =
+          lightness <= 0.5 ? delta / (max + min) : delta / (2 - max - min);
 
       if (max == r) {
         hue = (g - b) / delta + (g < b ? 6 : 0);
@@ -239,17 +227,14 @@ class Color {
       }
 
       hue /= 6;
-
     }
 
     return [hue, saturation, lightness];
-
   }
 
   /// Adds HSL to this color's HSL.
   /// HSL ranges are in 0.0 - 1.0.
   Color offsetHSL(double h, double s, double l) {
-
     var hsl = this.HSL;
 
     hsl[0] += h;
@@ -259,7 +244,6 @@ class Color {
     setHSL(hsl[0], hsl[1], hsl[2]);
 
     return this;
-
   }
 
   /// Sets this color from a hexadecimal value.

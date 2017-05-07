@@ -9,8 +9,7 @@ Scene scene;
 WebGLRenderer renderer;
 
 var windowHalfX, windowHalfY;
-var mouseX = 0,
-    mouseY = 0;
+var mouseX = 0, mouseY = 0;
 
 Object3D group;
 
@@ -25,11 +24,11 @@ void main() {
 }
 
 void init() {
-
   container = new Element.tag('div');
   document.body.nodes.add(container);
 
-  camera = new PerspectiveCamera(60.0, window.innerWidth / window.innerHeight, 1.0, 10000.0);
+  camera = new PerspectiveCamera(
+      60.0, window.innerWidth / window.innerHeight, 1.0, 10000.0);
   camera.position.z = 500.0;
 
   scene = new Scene();
@@ -44,7 +43,6 @@ void init() {
   var rnd = new Math.Random();
 
   for (var i = 0; i < 1000; i++) {
-
     var mesh = new Mesh(geometry, material);
     mesh.position.x = rnd.nextInt(2000).toDouble() - 1000.0;
     mesh.position.y = rnd.nextInt(2000).toDouble() - 1000.0;
@@ -57,7 +55,6 @@ void init() {
     mesh.updateMatrix();
 
     group.add(mesh);
-
   }
 
   scene.add(group);
@@ -92,7 +89,6 @@ animate(num time) {
 }
 
 render() {
-
   var time = new DateTime.now().millisecondsSinceEpoch * 0.001;
 
   var rx = Math.sin(time * 0.7) * 0.5,
@@ -109,5 +105,4 @@ render() {
   group.rotation.z = rz;
 
   renderer.render(scene, camera);
-
 }

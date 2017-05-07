@@ -136,8 +136,7 @@ class WebGLRenderer implements Renderer {
   //     _oldBlendDst = -1,
   //     _oldDepthTest = -1,
   //     _oldDepthWrite = -1,
-  var
-      _oldPolygonOffset,
+  var _oldPolygonOffset,
       _oldPolygonOffsetFactor,
       _oldPolygonOffsetUnits,
       _oldLineWidth,
@@ -1310,7 +1309,7 @@ class WebGLRenderer implements Renderer {
               var value = customAttribute.value[ca];
               if (value is double) {
                 customAttribute.array[ca] = value;
-              }else{
+              } else {
                 print('Expected double, got ${value.runtimeType}');
                 throw new TypeError();
               }
@@ -2876,8 +2875,7 @@ class WebGLRenderer implements Renderer {
 
     if (object.hasPositions) {
       _gl.bindBuffer(gl.ARRAY_BUFFER, object.__webglVertexBuffer);
-      _gl.bufferData(
-          gl.ARRAY_BUFFER, object.positionArray, gl.DYNAMIC_DRAW);
+      _gl.bufferData(gl.ARRAY_BUFFER, object.positionArray, gl.DYNAMIC_DRAW);
       _gl.enableVertexAttribArray(program.attributes["position"]);
       _gl.vertexAttribPointer(
           program.attributes["position"], 3, gl.FLOAT, false, 0, 0);
@@ -3469,7 +3467,8 @@ class WebGLRenderer implements Renderer {
       assert(object is Mesh);
       var influences = object.morphTargetInfluences;
 
-      var indexedActiveInfluences = enumerate(influences).where((i) => i.value > 0).toList();
+      var indexedActiveInfluences =
+          enumerate(influences).where((i) => i.value > 0).toList();
 
       if (indexedActiveInfluences.length >
           (material as Morphing).numSupportedMorphTargets) {
@@ -3532,8 +3531,9 @@ class WebGLRenderer implements Renderer {
           : (b.z - a.z).toInt();
 
   // numericalSort(a, b) => (b[0] - a[0]).toInt();
-  int indexedValueCompare(IndexedValue<Comparable> a, IndexedValue<Comparable> b)
-    => a.value.compareTo(b.value);
+  int indexedValueCompare(
+          IndexedValue<Comparable> a, IndexedValue<Comparable> b) =>
+      a.value.compareTo(b.value);
 
   // Rendering
 
@@ -4128,8 +4128,8 @@ class WebGLRenderer implements Renderer {
 
     Material material;
 
-    bool hasAttributes = ((material is ShaderMaterial) &&
-        material.attributes != null);
+    bool hasAttributes =
+        ((material is ShaderMaterial) && material.attributes != null);
 
     if (object is Mesh) {
       if (object.geometry is BufferGeometry) {
@@ -4193,9 +4193,9 @@ class WebGLRenderer implements Renderer {
     } else if (object is Ribbon) {
       material = getBufferMaterial(object, geometry);
 
-      customAttributesDirty = ((material is ShaderMaterial) &&
-              material.attributes != null) &&
-          areCustomAttributesDirty(material);
+      customAttributesDirty =
+          ((material is ShaderMaterial) && material.attributes != null) &&
+              areCustomAttributesDirty(material);
 
       if (geometry.verticesNeedUpdate ||
           geometry.colorsNeedUpdate ||
@@ -4309,11 +4309,7 @@ class WebGLRenderer implements Renderer {
       Material material, List<Light> lights, Fog fog, Object3D object) {
     //material.addEventListener( 'dispose', onMaterialDispose );
 
-    var i,
-        maxLightCount,
-        maxBones,
-        maxShadows,
-        shaderID;
+    var i, maxLightCount, maxBones, maxShadows, shaderID;
 
     if (material is MeshDepthMaterial) {
       shaderID = 'depth';
@@ -4852,16 +4848,7 @@ class WebGLRenderer implements Renderer {
   }
 
   loadUniformsGeneric(Program program, List<List<Uniform>> uniforms) {
-    var uniform,
-        value,
-        type,
-        location,
-        texture,
-        textureUnit,
-        i,
-        il,
-        j,
-        jl;
+    var uniform, value, type, location, texture, textureUnit, i, il, j, jl;
 
     jl = uniforms.length;
     for (j = 0; j < jl; j++) {
@@ -5291,7 +5278,7 @@ class WebGLRenderer implements Renderer {
         _gl.enable(gl.CULL_FACE);
       }
 
-      _oldDoubleSided = doubleSided? 1: 0;
+      _oldDoubleSided = doubleSided ? 1 : 0;
     }
 
     if (_oldFlipSided != flipSided) {
@@ -5301,7 +5288,7 @@ class WebGLRenderer implements Renderer {
         _gl.frontFace(gl.CCW);
       }
 
-      _oldFlipSided = flipSided? 1: 0;
+      _oldFlipSided = flipSided ? 1 : 0;
     }
   }
 
@@ -5313,14 +5300,14 @@ class WebGLRenderer implements Renderer {
         _gl.disable(gl.DEPTH_TEST);
       }
 
-      _oldDepthTest = depthTest? 1: 0;
+      _oldDepthTest = depthTest ? 1 : 0;
     }
   }
 
   setDepthWrite(bool depthWrite) {
     if (_oldDepthWrite != depthWrite) {
       _gl.depthMask(depthWrite);
-      _oldDepthWrite = depthWrite? 1: 0;
+      _oldDepthWrite = depthWrite ? 1 : 0;
     }
   }
 
@@ -5897,8 +5884,8 @@ class WebGLRenderer implements Renderer {
 
           texture.generateMipmaps = false;
         } else {
-          _gl.texImage2D(gl.TEXTURE_2D, 0, glFormat, image.width,
-              image.height, 0, glFormat, glType, image.data);
+          _gl.texImage2D(gl.TEXTURE_2D, 0, glFormat, image.width, image.height,
+              0, glFormat, glType, image.data);
         }
       } else if (texture is CompressedTexture) {
         // compressed textures can only use manually created mipmaps
@@ -6018,8 +6005,7 @@ class WebGLRenderer implements Renderer {
             }
           } else {
             // _gl.texImage2DImage(
-            _gl.texImage2D(
-              gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glFormat,
+            _gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glFormat,
                 glFormat, glType, cubeImage[i]);
           }
         }

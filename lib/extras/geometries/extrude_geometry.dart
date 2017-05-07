@@ -162,8 +162,12 @@ class ExtrudeGeometry extends Geometry {
 
     // pts from i
 
-    p..setFrom(pt_i)..add(v_hat);
-    q..setFrom(pt_i)..add(w_hat);
+    p
+      ..setFrom(pt_i)
+      ..add(v_hat);
+    q
+      ..setFrom(pt_i)
+      ..add(w_hat);
 
     if (p.x == q.x && p.y == q.y) {
       // TODO add vector_math ".equals(p, q)"
@@ -174,8 +178,12 @@ class ExtrudeGeometry extends Geometry {
 
     // Points from j, k. helps prevents points cross overover most of the time
 
-    p..setFrom(pt_j)..add(v_hat);
-    q..setFrom(pt_k)..add(w_hat);
+    p
+      ..setFrom(pt_j)
+      ..add(v_hat);
+    q
+      ..setFrom(pt_k)
+      ..add(w_hat);
 
     v_dot_w_hat = v.dot(w_hat);
     q.sub(p);
@@ -201,8 +209,12 @@ class ExtrudeGeometry extends Geometry {
       return _getBevelVec1(pt_i, pt_j, pt_k);
     }
 
-    intersection = v..scale(s)..add(p)..sub(pt_i);
-    return intersection.clone(); // Don't normalize!, otherwise sharp corners become ugly
+    intersection = v
+      ..scale(s)
+      ..add(p)
+      ..sub(pt_i);
+    return intersection
+        .clone(); // Don't normalize!, otherwise sharp corners become ugly
   }
 
   static var RAD_TO_DEGREES = 180 / Math.PI;
@@ -362,14 +374,7 @@ class ExtrudeGeometry extends Geometry {
       vertices.addAll(ahole);
     }
 
-    var b,
-        bs,
-        t,
-        z,
-        vert,
-        vlen = vertices.length,
-        face,
-        flen = faces.length;
+    var b, bs, t, z, vert, vlen = vertices.length, face, flen = faces.length;
 
     //------
     // Find directions for point movement
